@@ -29,12 +29,31 @@ int allocate_grid(double ***grid, int num) {
 }
 
 
-void assign_corners(double ***grid, int dim, double vals[][2]) {
+void get_corners(double **grid, double *vals[2], int corner_indices[2]) {
+    vals[0][0] = grid[corner_indices[0]][corner_indices[0]];
+    vals[0][1] = grid[corner_indices[0]][corner_indices[1]];
+    vals[1][0] = grid[corner_indices[1]][corner_indices[0]];
+    vals[1][1] = grid[corner_indices[1]][corner_indices[1]];
+}
+
+
+void set_corners(double ***grid, double vals[][2], int corner_indices[2]) {
+    (*grid)[corner_indices[0]][corner_indices[0]] = vals[0][0];
+    (*grid)[corner_indices[0]][corner_indices[1]] = vals[0][1];
+    (*grid)[corner_indices[1]][corner_indices[0]] = vals[1][0];
+    (*grid)[corner_indices[1]][corner_indices[1]] = vals[1][1];
+}
+
+
+void init_corners(double ***grid, int dim, double vals[][2]) {
     if (dim > 0) {
-        (*grid)[0][0] = vals[0][0];
-        (*grid)[0][dim-1] = vals[0][1];
-        (*grid)[dim-1][0] = vals[1][0];
-        (*grid)[dim-1][dim-1] = vals[1][1];
+        int corner_indices[2] = {0, dim-1};
+        set_corners(grid, vals, corner_indices);
+    
+        // (*grid)[0][0] = vals[0][0];
+        // (*grid)[0][dim-1] = vals[0][1];
+        // (*grid)[dim-1][0] = vals[1][0];
+        // (*grid)[dim-1][dim-1] = vals[1][1];
     }
 }
 
@@ -42,7 +61,7 @@ void assign_corners(double ***grid, int dim, double vals[][2]) {
 int diamond_square(double ***grid, int num, double corner_vals[][2]) {
     int dim = allocate_grid(grid, num);
     init_grid(grid, dim);
-    assign_corners(grid, dim, corner_vals);
+    init_corners(grid, dim, corner_vals);
     
     return dim;
 }
