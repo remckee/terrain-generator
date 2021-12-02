@@ -83,3 +83,22 @@ void init_grid(double ***grid, int dim) {
         }
     }
 }
+
+
+// Add a random value of at most max_var to the average of vals
+double midpoint(double vals[CORNERS], double max_var) {
+    double ave;
+    for (int i = 0; i < CORNERS; i++) {
+        ave += vals[i];
+    }
+    return ave/CORNERS + rand_double(max_var);
+}
+
+
+// Returns a random double between 0.0 and max_val
+double rand_double(double max_val)
+{
+    return rand()*max_val/RAND_MAX;
+}
+
+

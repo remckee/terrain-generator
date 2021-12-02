@@ -26,6 +26,8 @@ void init_corners(double ***, int, double[][2]);
 int diamond_square(double ***, int, double[][2]);
 void print_grid(double **, int);
 void init_grid(double ***, int);
+double rand_double(double);
+double midpoint(double[CORNERS]); 
 
 #endif /* DIAMOND_SQUARE_H */
 
