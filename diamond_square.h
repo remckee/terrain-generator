@@ -15,19 +15,21 @@ Final Project
 #include <math.h>
 #include <time.h>
 
-#define CORNERS 4
+#define DIMS      2
+#define CORNERS   DIMS * DIMS
 
 
 int dimension(int);
 int allocate_grid(double ***, int);
-void get_corners(double **, double *[2], int[2]);
-void set_corners(double ***, double[][2], int[2]);
-void init_corners(double ***, int, double[][2]);
-int diamond_square(double ***, int, double[][2]);
+void get_corners(double **, double ***, int[DIMS]);
+void set_corners(double ***, double[][DIMS], int[DIMS]);
+void init_corners(double ***, int, double[][DIMS]);
+int diamond_square(double ***, int, double[][DIMS], double);
 void print_grid(double **, int);
 void init_grid(double ***, int);
 double rand_double(double);
-double midpoint(double[CORNERS]); 
+double midpoint(double **, double); 
+int diamond_step(double ***, int, int, double);
 
 #endif /* DIAMOND_SQUARE_H */
 
