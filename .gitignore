@@ -6,11 +6,15 @@
 */
 
 #unignore .c, .h, and .sh and this file, and the README
-!.gitignore
-!README.txt
+!*.bmp
 !*.cpp
+!*.frag
+!.gitignore
 !*.h
 !*.hpp
-!*.sh
 !*.obj
-!*.bmp
+!README.md
+!README.txt
+!*.sh
+!*.vert
+
