@@ -26,6 +26,16 @@ int allocate_grid(double ***grid, int num) {
 }
 
 
+void deallocate(double **array, int dim) {
+    for (int i = 0; i < dim; i++) {
+        delete array[i];
+        array[i] = nullptr;
+    }
+    delete array;
+    array = nullptr;
+}
+
+
 int diamond_square(double ***grid, int num, double corner_vals[][DIMS], double max_var) {
     int dim = allocate_grid(grid, num);
     init_grid(grid, dim);
@@ -49,6 +59,7 @@ int diamond_step(double ***grid, int dim, int square, double max_var) {
             int corner_indices[CORNERS] = {i, j, i+square, j+square};
             get_square_corners(*grid, &vals, corner_indices);
             (*grid)[i+square/2][j+square/2] = midpoint(vals, max_var);
+            deallocate(vals, DIMS);
         }
     }
     return dim;

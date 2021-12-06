@@ -20,6 +20,7 @@ Final Project
 
 
 int allocate_grid(double ***, int);
+void deallocate(double **, int);
 int diamond_square(double ***, int, double[][DIMS], double);
 int diamond_step(double ***, int, int, double);
 int dimension(int);
