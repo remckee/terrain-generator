@@ -9,16 +9,16 @@ Final Project
 #define h           0.05
 
 
-int allocate_grid(double ***grid, int num) {
+int allocate_grid(GLfloat ***grid, int num) {
     int result = -1;
     
     if (num >= 0) {
         int dim = dimension(num);
         result = dim;
-        *grid = new double*[dim];
+        *grid = new GLfloat*[dim];
         
         for (int i = 0; i < dim; i++) {
-            (*grid)[i] = new double[dim];
+            (*grid)[i] = new GLfloat[dim];
         }
     }
 
@@ -26,7 +26,7 @@ int allocate_grid(double ***grid, int num) {
 }
 
 
-void deallocate(double **array, int dim) {
+void deallocate(GLfloat **array, int dim) {
     for (int i = 0; i < dim; i++) {
         delete array[i];
         array[i] = nullptr;
@@ -36,7 +36,7 @@ void deallocate(double **array, int dim) {
 }
 
 
-int diamond_square(double ***grid, int num, double corner_vals[][DIMS], double max_var) {
+int diamond_square(GLfloat ***grid, int num, GLfloat corner_vals[][DIMS], GLfloat max_var) {
     int dim = allocate_grid(grid, num);
     init_grid(grid, dim);
     init_corners(grid, dim, corner_vals);
@@ -52,10 +52,10 @@ int diamond_square(double ***grid, int num, double corner_vals[][DIMS], double m
 }
 
 
-int diamond_step(double ***grid, int dim, int square, double max_var) {
+int diamond_step(GLfloat ***grid, int dim, int square, GLfloat max_var) {
     for (int i = 0; i < dim-1; i+=square) {
         for (int j = 0; j < dim-1; j+=square) {
-            double **vals;
+            GLfloat **vals;
             int corner_indices[CORNERS] = {i, j, i+square, j+square};
             get_square_corners(*grid, &vals, corner_indices);
             (*grid)[i+square/2][j+square/2] = midpoint(vals, max_var);
@@ -71,10 +71,10 @@ int dimension(int num) {
 }
 
 
-void get_diamond_corners(double **grid, int dim, int sq, double ***vals, int mid_indices[DIMS]) {
-    *vals = new double*[DIMS];
+void get_diamond_corners(GLfloat **grid, int dim, int sq, GLfloat ***vals, int mid_indices[DIMS]) {
+    *vals = new GLfloat*[DIMS];
     for (int i = 0; i < DIMS; i++) {
-        (*vals)[i] = new double[DIMS];
+        (*vals)[i] = new GLfloat[DIMS];
     }
     int topx = mid_indices[0]-sq;
     int lefty = mid_indices[1]-sq;
@@ -108,10 +108,10 @@ void get_diamond_corners(double **grid, int dim, int sq, double ***vals, int mid
 }
 
 
-void get_square_corners(double **grid, double ***vals, int corner_indices[CORNERS]) {
-    *vals = new double*[DIMS];
+void get_square_corners(GLfloat **grid, GLfloat ***vals, int corner_indices[CORNERS]) {
+    *vals = new GLfloat*[DIMS];
     for (int i = 0; i < DIMS; i++) {
-        (*vals)[i] = new double[DIMS];
+        (*vals)[i] = new GLfloat[DIMS];
         for (int j = 0; j < DIMS; j++) {
             (*vals)[i][j] = grid[corner_indices[i*2]][corner_indices[1+j*2]];
         }
@@ -120,7 +120,7 @@ void get_square_corners(double **grid, double ***vals, int corner_indices[CORNER
 
 
 // corner_indices: {top-left x, top-left y, bottom-right x, bottom-right y}
-void init_corners(double ***grid, int dim, double vals[][DIMS]) {
+void init_corners(GLfloat ***grid, int dim, GLfloat vals[][DIMS]) {
     if (dim > 0) {
         int corner_indices[CORNERS] = {0, 0, dim-1, dim-1};
         set_corners(grid, vals, corner_indices);
@@ -128,7 +128,7 @@ void init_corners(double ***grid, int dim, double vals[][DIMS]) {
 }
 
 
-void init_grid(double ***grid, int dim) {
+void init_grid(GLfloat ***grid, int dim) {
     for (int i = 0; i < dim; i++) {
         for (int j = 0; j < dim; j++) {
             (*grid)[i][j] = INIT_VAL;
@@ -137,19 +137,19 @@ void init_grid(double ***grid, int dim) {
 }
 
 // Add a random value of at most max_var to the average of vals
-double midpoint(double **vals, double max_var) {
-    double ave = 0;
+GLfloat midpoint(GLfloat **vals, GLfloat max_var) {
+    GLfloat ave = 0;
     for (int i = 0; i < DIMS; i++) {
         for (int j = 0; j < DIMS; j++) {
             ave += vals[i][j];
         }
     }
     ave /= CORNERS;
-    return ave + rand_double(max_var) * pow(2, -h);
+    return ave + rand_GLfloat(max_var) * pow(2, -h);
 }
 
 
-void print_grid(double **grid, int dim) {
+void print_grid(GLfloat **grid, int dim) {
     for (int i = 0; i < dim; i++) {
         for (int j = 0; j < dim; j++) {
             //printf("%d, %d = %f \n", i, j, grid[i][j]);
@@ -160,13 +160,13 @@ void print_grid(double **grid, int dim) {
 }
 
 
-// Returns a random double between 0.0 and max_val
-double rand_double(double max_val) {
+// Returns a random GLfloat between 0.0 and max_val
+GLfloat rand_GLfloat(GLfloat max_val) {
     return rand()*max_val/RAND_MAX;
 }
 
 
-void set_corners(double ***grid, double vals[][DIMS], int corner_indices[CORNERS]) {
+void set_corners(GLfloat ***grid, GLfloat vals[][DIMS], int corner_indices[CORNERS]) {
     for (int i = 0; i < DIMS; i++) {
         for (int j = 0; j < DIMS; j++) {
             (*grid)[corner_indices[i*2]][corner_indices[1+j*2]] = vals[i][j];
@@ -175,10 +175,10 @@ void set_corners(double ***grid, double vals[][DIMS], int corner_indices[CORNERS
 }
 
 
-int square_step(double ***grid, int dim, int square, double max_var) {
+int square_step(GLfloat ***grid, int dim, int square, GLfloat max_var) {
     for (int i = 0, k = 1; i < dim; i+=square/2, k++) {
         for (int j = (k%2)*square/2; j < dim; j+=square) {
-            double **vals;
+            GLfloat **vals;
             int mid_indices[DIMS] = {i, j};
             get_diamond_corners(*grid, dim, square/2, &vals, mid_indices);
             (*grid)[i][j] = midpoint(vals, max_var);
@@ -188,7 +188,7 @@ int square_step(double ***grid, int dim, int square, double max_var) {
 }
 
 
-int wrap_aroundx(double **grid, int dim, int x, int midy, int diff) {
+int wrap_aroundx(GLfloat **grid, int dim, int x, int midy, int diff) {
     while (grid[x][midy]==-1 && x >= 0 && x < dim) {
         x += diff;
     }
@@ -196,7 +196,7 @@ int wrap_aroundx(double **grid, int dim, int x, int midy, int diff) {
 }
 
 
-int wrap_aroundy(double **grid, int dim, int y, int midx, int diff) {
+int wrap_aroundy(GLfloat **grid, int dim, int y, int midx, int diff) {
     while (grid[midx][y]==-1 && y >= 0 && y < dim) {
         y += diff;
     }

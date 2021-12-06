@@ -15,26 +15,31 @@ Final Project
 #include <math.h>
 #include <time.h>
 
+#include "glslprogram.h"
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include "glut.h"
+
 #define DIMS      2
 #define CORNERS   DIMS * DIMS
 
 
-int allocate_grid(double ***, int);
-void deallocate(double **, int);
-int diamond_square(double ***, int, double[][DIMS], double);
-int diamond_step(double ***, int, int, double);
+int allocate_grid(GLfloat ***, int);
+void deallocate(GLfloat **, int);
+int diamond_square(GLfloat ***, int, GLfloat[][DIMS], GLfloat);
+int diamond_step(GLfloat ***, int, int, GLfloat);
 int dimension(int);
-void get_diamond_corners(double **, int, int, double ***, int[CORNERS]);
-void get_square_corners(double **, double ***, int[DIMS]);
-void init_corners(double ***, int, double[][DIMS]);
-void init_grid(double ***, int);
-double midpoint(double **, double);
-void print_grid(double **, int);
-double rand_double(double);
-void set_corners(double ***, double[][DIMS], int[DIMS]);
-int square_step(double ***, int, int, double);
-int wrap_aroundx(double **, int, int, int, int);
-int wrap_aroundy(double **, int, int, int, int);
+void get_diamond_corners(GLfloat **, int, int, GLfloat ***, int[CORNERS]);
+void get_square_corners(GLfloat **, GLfloat ***, int[DIMS]);
+void init_corners(GLfloat ***, int, GLfloat[][DIMS]);
+void init_grid(GLfloat ***, int);
+GLfloat midpoint(GLfloat **, GLfloat);
+void print_grid(GLfloat **, int);
+GLfloat rand_GLfloat(GLfloat);
+void set_corners(GLfloat ***, GLfloat[][DIMS], int[DIMS]);
+int square_step(GLfloat ***, int, int, GLfloat);
+int wrap_aroundx(GLfloat **, int, int, int, int);
+int wrap_aroundy(GLfloat **, int, int, int, int);
 
 #endif /* DIAMOND_SQUARE_H */
 
