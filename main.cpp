@@ -23,6 +23,7 @@ bool        Frozen;                 // whether scene is frozen
 int         MainWindow;             // window id for main graphics window
 float       Scale;                  // scaling factor
 int         ShadowsOn;              // != 0 means to turn shadows on
+int         WhichBiome;             // the currently active biome
 int         WhichColor;             // index into Colors[ ]
 int         WhichProjection;        // ORTHO or PERSP
 int         Xmouse, Ymouse;         // mouse values
@@ -211,6 +212,12 @@ void DoDepthMenu( int id ) {
 }
 
 
+void DoBiomeMenu( int id ) {
+    WhichBiome = id;
+    Redisplay();
+}
+
+
 // main menu callback:
 void DoMainMenu( int id ) {
     switch( id )
@@ -291,6 +298,10 @@ float ElapsedSeconds( ) {
 
 int GetAxesOn() {
     return AxesOn;
+}
+
+int GetBiome() {
+    return WhichBiome;
 }
 
 int GetDebugOn() {
@@ -438,6 +449,14 @@ void InitMenus( ) {
     glutAddMenuEntry( "Off",  0 );
     glutAddMenuEntry( "On",   1 );
 
+    int biomemenu = glutCreateMenu( DoBiomeMenu );
+    glutAddMenuEntry( "Coastal",                COASTAL );
+    glutAddMenuEntry( "Desert",                 DESERT );
+    glutAddMenuEntry( "Grassland",              GRASSLAND );
+    glutAddMenuEntry( "Temperate forest",       TEMPERATE );
+    glutAddMenuEntry( "Tropical rainforest",    TROPICAL );
+    glutAddMenuEntry( "Tundra",                 TUNDRA );
+    
     int depthcuemenu = glutCreateMenu( DoDepthMenu );
     glutAddMenuEntry( "Off",  0 );
     glutAddMenuEntry( "On",   1 );
@@ -464,6 +483,7 @@ void InitMenus( ) {
 
     int mainmenu = glutCreateMenu( DoMainMenu );
     glutAddSubMenu(   "Axes",          axesmenu);
+    glutAddSubMenu(   "Biomes",        biomemenu);
     glutAddSubMenu(   "Colors",        colormenu);
     glutAddSubMenu(   "Depth Cue",     depthcuemenu);
     glutAddSubMenu(   "Projection",    projmenu );
@@ -493,8 +513,11 @@ void Keyboard( unsigned char c, int x, int y ) {
             break;
 
         case 'f':
-            Frozen = true;
-            glutIdleFunc( NULL );
+            Frozen = ! Frozen;
+            if( Frozen )
+                glutIdleFunc( NULL );
+            else
+                glutIdleFunc( Animate );
             break;
 
         // animate fragments, freeze vertex animation
@@ -638,6 +661,7 @@ void Reset( ) {
     DepthCueOn = 0;
     Scale  = 1.0;
     ShadowsOn = 0;
+    WhichBiome = TEMPERATE;
     WhichColor = WHITE;
     WhichProjection = PERSP;
     Xrot = Yrot = 0.;
@@ -662,6 +686,12 @@ void Resize( int width, int height ) {
 void SetAxesOn(int value) {
     AxesOn = value;
 }
+
+
+void SetBiome(int value) {
+    WhichBiome = value;
+}
+
 
 void SetDebugOn(int value) {
     DebugOn = value;

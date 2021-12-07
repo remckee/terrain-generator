@@ -115,6 +115,16 @@ enum Colors  {
 };
 
 
+enum Biomes {
+    COASTAL,
+    DESERT,
+    GRASSLAND,
+    TEMPERATE,
+    TUNDRA,
+    TROPICAL
+};
+
+
 // the color definitions:
 // this order must match the menu order
 const GLfloat Colors[ ][3] =  {
@@ -143,6 +153,7 @@ void    Animate( );
 void    Display( );
 void    DisplayCustom( );
 void    DoAxesMenu( int );
+void    DoBiomeMenu( int );
 void    DoColorMenu( int );
 void    DoDepthBufferMenu( int );
 void    DoDepthFightingMenu( int );
@@ -155,6 +166,7 @@ void    DoRasterString( float, float, float, char * );
 void    DoStrokeString( float, float, float, float, char * );
 float   ElapsedSeconds( );
 int     GetAxesOn( );
+int     GetBiome( );
 int     GetDebugOn( );
 int     GetDepthCueOn( );
 int     GetDepthBufferOn( );
@@ -175,6 +187,7 @@ int     RedrawGrid( );
 void    Reset( );
 void    Resize( int, int );
 void    SetAxesOn(int);
+void    SetBiome(int);
 void    SetDebugOn(int);
 void    SetDepthCueOn(int);
 void    SetDepthBufferOn(int);

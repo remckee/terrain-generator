@@ -271,9 +271,7 @@ unsigned char *ArrToTexture( GLfloat **array, int width, int height ) {
             *(tp+0) = ch;        // r
             *(tp+1) = ch;        // g
             *(tp+2) = ch;        // b
-            //printf("%d ", ch);
         }
-        //printf("\n");
     }
     return texture;
 }
