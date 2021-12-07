@@ -41,24 +41,43 @@ int diamond_square(GLfloat ***grid, int num, GLfloat corner_vals[][DIMS], GLfloa
     init_grid(grid, dim);
     init_corners(grid, dim, corner_vals);
     int square = dim-1;
+    GLfloat max_val = corner_vals[0][0];
+    
+    for (int i = 0; i < DIMS; i++) {
+        for (int j = 0; j < DIMS; j++) {
+            if (corner_vals[i][j] > max_val) {
+                max_val = corner_vals[i][j];
+            }
+        }
+    }
     
     while (square > 1) {
-        diamond_step(grid, dim, square, max_var);
-        square_step(grid, dim, square, max_var);
+        diamond_step(grid, dim, square, max_var, &max_val);
+        square_step(grid, dim, square, max_var, &max_val);
         square /= 2;
+    }
+    
+    for (int i = 0; i < dim; i++) {
+        for (int j = 0; j < dim; j++) {
+            (*grid)[i][j] = (*grid)[i][j]/max_val;
+        }
     }
 
     return dim;
 }
 
 
-int diamond_step(GLfloat ***grid, int dim, int square, GLfloat max_var) {
+int diamond_step(GLfloat ***grid, int dim, int square, GLfloat max_var, GLfloat *max_val) {
     for (int i = 0; i < dim-1; i+=square) {
         for (int j = 0; j < dim-1; j+=square) {
             GLfloat **vals;
             int corner_indices[CORNERS] = {i, j, i+square, j+square};
             get_square_corners(*grid, &vals, corner_indices);
-            (*grid)[i+square/2][j+square/2] = midpoint(vals, max_var);
+            GLfloat mp = midpoint(vals, max_var);
+            (*grid)[i+square/2][j+square/2] = mp;
+            if (mp > *max_val) {
+                *max_val = mp;
+            }
             deallocate(vals, DIMS);
         }
     }
@@ -175,13 +194,17 @@ void set_corners(GLfloat ***grid, GLfloat vals[][DIMS], int corner_indices[CORNE
 }
 
 
-int square_step(GLfloat ***grid, int dim, int square, GLfloat max_var) {
+int square_step(GLfloat ***grid, int dim, int square, GLfloat max_var, GLfloat *max_val) {
     for (int i = 0, k = 1; i < dim; i+=square/2, k++) {
         for (int j = (k%2)*square/2; j < dim; j+=square) {
             GLfloat **vals;
             int mid_indices[DIMS] = {i, j};
             get_diamond_corners(*grid, dim, square/2, &vals, mid_indices);
-            (*grid)[i][j] = midpoint(vals, max_var);
+            GLfloat mp = midpoint(vals, max_var);
+            (*grid)[i][j] = mp;
+            if (mp > *max_val) {
+                *max_val = mp;
+            }
         }
     }
     return dim;
