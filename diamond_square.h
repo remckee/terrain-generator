@@ -26,7 +26,7 @@ Final Project
 
 int allocate_grid(GLfloat ***, int);
 void deallocate(GLfloat **, int);
-int diamond_square(GLfloat ***, int, GLfloat[][DIMS], GLfloat);
+int diamond_square(GLfloat ***, int, GLfloat[][DIMS], GLfloat, GLfloat*);
 int diamond_step(GLfloat ***, int, int, GLfloat, GLfloat*);
 int dimension(int);
 void get_diamond_corners(GLfloat **, int, int, GLfloat ***, int[CORNERS]);

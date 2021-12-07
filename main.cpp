@@ -127,7 +127,7 @@ void Display( ) {
     glLoadIdentity( );
 
     // set the eye position, look-at position, and up-vector:
-    gluLookAt( 0., 0., 3.,     0., 0., 0.,     0., 1., 0. );
+    gluLookAt( 0., 0., 30.,     0., 0., 0.,     0., 1., 0. );
 
     // rotate the scene:
     glRotatef( (GLfloat)Yrot, 0., 1., 0. );
@@ -217,6 +217,10 @@ void DoMainMenu( int id ) {
     {
         case RESET:
             Reset( );
+            break;
+
+        case REGENERATE:
+            RedrawGrid( );
             break;
 
         case QUIT:
@@ -463,6 +467,7 @@ void InitMenus( ) {
     glutAddSubMenu(   "Colors",        colormenu);
     glutAddSubMenu(   "Depth Cue",     depthcuemenu);
     glutAddSubMenu(   "Projection",    projmenu );
+    glutAddMenuEntry( "Regenerate",    REGENERATE );
     glutAddMenuEntry( "Reset",         RESET );
     glutAddSubMenu(   "Debug",         debugmenu);
     glutAddMenuEntry( "Quit",          QUIT );

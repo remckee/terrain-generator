@@ -14,7 +14,6 @@ PtsPointer( int lat, int lng )
     return &Pts[ NumLngs*lat + lng ];
 }
 
-inline
 void
 DrawPoint( struct point *p )
 {
@@ -24,7 +23,7 @@ DrawPoint( struct point *p )
 }
 
 void
-OsuSphere( float radius, int slices, int stacks )
+OsuSphere( float radius, int slices, int stacks, float tex_scale )
 {
     // set the globals:
 
@@ -60,8 +59,8 @@ OsuSphere( float radius, int slices, int stacks )
             p->nx = x;
             p->ny = y;
             p->nz = z;
-            p->s = ( lng + M_PI    ) / ( 2.*M_PI );
-            p->t = ( lat + M_PI/2. ) / M_PI;
+            p->s = tex_scale * ( lng + M_PI    ) / ( 2.*M_PI );
+            p->t = tex_scale * ( lat + M_PI/2. ) / M_PI;
         }
     }
 
@@ -168,8 +167,7 @@ Unit( float vin[3], float vout[3] )
 }
 
 void
-OsuCone( float radBot, float radTop, float height, int slices, int stacks )
-{
+OsuCone( float radBot, float radTop, float height, int slices, int stacks, float tex_scale ) {
     // gracefully handle degenerate case:
 
     if( radBot == 0.  &&  radTop == 0. )
@@ -225,8 +223,8 @@ OsuCone( float radBot, float radTop, float height, int slices, int stacks )
             p->ny = radBot - radTop;
             p->nz = height*z;
             Unit( &p->nx, &p->nx );
-            p->s = (float)ilng / (float)(NumLngs-1);
-            p->t = (float)ilat / (float)(NumLats-1);
+            p->s = tex_scale * (float)ilng / (float)(NumLngs-1);
+            p->t = tex_scale * (float)ilat / (float)(NumLats-1);
         }
     }
 

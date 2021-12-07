@@ -28,10 +28,10 @@ struct point
 
 
 inline struct point *PtsPointer( int, int );
-inline void DrawPoint( struct point* );
-void OsuSphere( float, int, int );
+void DrawPoint( struct point* );
+void OsuSphere( float, int, int, float );
 float Unit( float[3] );
 float Unit( float[3], float[3] );
-void OsuCone( float, float, float, int, int );
+void OsuCone( float, float, float, int, int, float );
 
 #endif /* OSUSPHERE_H */

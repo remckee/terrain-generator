@@ -91,6 +91,7 @@ enum Projections  {
 // which button:
 enum ButtonVals  {
     RESET,
+    REGENERATE,
     QUIT
 };
 
@@ -136,7 +137,6 @@ const GLfloat FOGEND      = { 4. };
 
 const int CYCLE = 10000;
 const float PI =     3.14159265;
-const GLfloat PLANE_UNIT = 257.f;   // Number of 'pixels' per unit in drawing space
 
 // function prototypes:
 void    Animate( );
@@ -171,6 +171,7 @@ void    Keyboard( unsigned char, int, int );
 void    MouseButton( int, int, int, int );
 void    MouseMotion( int, int );
 void    Redisplay( );
+int     RedrawGrid( );
 void    Reset( );
 void    Resize( int, int );
 void    SetAxesOn(int);
@@ -191,6 +192,9 @@ short           ReadShort( FILE * );
 void            Cross(float[3], float[3], float[3]);
 float           Dot(float [3], float [3]);
 float           Unit(float [3], float [3]);
+
+// convert a 2D array of floats normalized to 1.0 to texture
+unsigned char*  ArrToTexture( GLfloat**, int, int );
 
 #endif /* FINAL_H */
 
