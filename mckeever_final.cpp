@@ -23,38 +23,23 @@ GLuint      PlaneList;              // display list for base rectangle for terra
 GLSLProgram *Pattern;
 float       S0 = TEXTURE_FACTOR/2.f;
 float       T0 = S0;
-float       Ka, Kd, Ks;
-float       ColorR, ColorG, ColorB;
 float       Size = 1.f;
-float       Ct = 1.f;
 GLfloat     **grid;
 unsigned char *Texture;
 GLuint      Tex;
 GLuint      height_buf;
 GLfloat     MaxVal;
-float plane_width;
+float       plane_width;
 
 
-unsigned char *Texture2;
-GLuint      Tex2;
-unsigned char *Texture3;
-GLuint      Tex3;
+unsigned char   *Texture2;
+GLuint          Tex2;
+unsigned char   *Texture3;
+GLuint          Tex3;
 
 // draw the complete scene:
 void DisplayCustom( ) {
     // draw the current object:
-
-    Ka = 0.5f;
-    Kd = 0.6f;
-    Ks = 0.2f;
-
-    if (GetVertAnimation()) {
-        Ct = sin(GetCycleTime(CYCLE) * 2.f * PI);
-    }
-    
-    // if (GetFragAnimation()) {
-    //     S0 = cos(PI / 3.f * (GetCycleTime(CYCLE) * 2.f - 1.f) );
-    // }
 
     Pattern->Use( );
     glActiveTexture( GL_TEXTURE5 );
@@ -90,7 +75,26 @@ void DisplayCustom( ) {
     Pattern->SetUniformVariable( (char*)"uLightPosz", 10.f);
     Pattern->SetUniformVariable( (char*)"uExag",1.f);
     
-    glCallList( PlaneList );
+    // Draw baseline plane of terrain
+    GLfloat w = 0.2f;
+    glColor3f( 1.f, 1.f, 1.f );
+    glEnable( GL_TEXTURE_2D );
+        int offset = plane_width/2;
+        for (int i = 0; i < plane_width - 1; i++) {
+            glBegin(GL_TRIANGLE_STRIP);
+            for (int j = 0; j < plane_width; j++) {
+                glTexCoord2f( (i+1)/plane_width, (j)/plane_width );
+                glNormal3f( 0.f, 0.f, 1.f );
+                glVertex3f( i*w+w-offset*w, j*w-offset*w, grid[i+1][j] );
+
+                glTexCoord2f( (i)/plane_width, (j)/plane_width );
+                glNormal3f( 0.f, 0.f, 1.f );
+                glVertex3f( i*w-offset*w, j*w-offset*w, grid[i][j] );
+            }
+            glEnd( );
+        }
+    glDisable( GL_TEXTURE_2D );
+
     Pattern->UnUse( );
 }
 
@@ -181,8 +185,18 @@ void SetPlanePoint(GLfloat x, GLfloat y, GLfloat z, GLfloat wid) {
 
 
 int RedrawGrid() {
+    if (plane_width > 0) {
+        deallocate(grid, plane_width);
+    }
+
     GLfloat corners[][2] = {2.f, 5.f, 3.f, 7.f};
-    return diamond_square(&grid, N, corners, 0.5f, &MaxVal) - 1;
+    int dim = diamond_square(&grid, N, corners, 0.5f, &MaxVal) - 1;
+
+    Texture3 = ArrToTexture( grid, plane_width, plane_width );
+    glBindTexture( GL_TEXTURE_2D, Tex3 ); // make the Tex0 texture current and set its parameters
+    glTexImage2D( GL_TEXTURE_2D, 0, 3, plane_width, plane_width, 0, GL_RGB, GL_UNSIGNED_BYTE, Texture3 );
+
+    return dim;
 }
 
 
@@ -198,19 +212,19 @@ void InitLists( ) {
     glEndList( );
 
     // Draw baseline plane of terrain
-    GLfloat w = 0.2f;
-    glColor3f( 1.f, 1.f, 1.f );
-    PlaneList = glGenLists( 1 );
-    glNewList( PlaneList, GL_COMPILE );
-    glEnable( GL_TEXTURE_2D );
+    // GLfloat w = 0.2f;
+    // glColor3f( 1.f, 1.f, 1.f );
+    // PlaneList = glGenLists( 1 );
+    // glNewList( PlaneList, GL_COMPILE );
+    // glEnable( GL_TEXTURE_2D );
         //float plane_width = (float)RedrawGrid();
-        int offset = plane_width/2;
+    //     int offset = plane_width/2;
         //print_grid(grid, plane_width);
 
         //glutSolidCube(1.f);
-        for (int i = 0; i < plane_width - 1; i++) {
-            glBegin(GL_TRIANGLE_STRIP);
-            for (int j = 0; j < plane_width; j++) {
+    //     for (int i = 0; i < plane_width - 1; i++) {
+    //         glBegin(GL_TRIANGLE_STRIP);
+    //         for (int j = 0; j < plane_width; j++) {
                 // glTexCoord2f( 1.f, 0.f );
                 // glNormal3f( 0.f, 0.f, 1.f );
                 // glVertex3f( plane_width*w-offset*w, -offset*w, 0.f );
@@ -227,13 +241,13 @@ void InitLists( ) {
                 // glNormal3f( 0.f, 0.f, 1.f );
                 // glVertex3f( -offset*w, plane_width*w-offset*w, 0.f );
                 
-                glTexCoord2f( (i+1)/plane_width, (j)/plane_width );
-                glNormal3f( 0.f, 0.f, 1.f );
-                glVertex3f( i*w+w-offset*w, j*w-offset*w, grid[i+1][j] );
+    //             glTexCoord2f( (i+1)/plane_width, (j)/plane_width );
+    //             glNormal3f( 0.f, 0.f, 1.f );
+    //             glVertex3f( i*w+w-offset*w, j*w-offset*w, grid[i+1][j] );
 
-                glTexCoord2f( (i)/plane_width, (j)/plane_width );
-                glNormal3f( 0.f, 0.f, 1.f );
-                glVertex3f( i*w-offset*w, j*w-offset*w, grid[i][j] );
+    //             glTexCoord2f( (i)/plane_width, (j)/plane_width );
+    //             glNormal3f( 0.f, 0.f, 1.f );
+    //             glVertex3f( i*w-offset*w, j*w-offset*w, grid[i][j] );
             
                 // glNormal3f( 0.f, 0.f, 1.f );
                 // glTexCoord2f( (i+1)/plane_width, (j+1)/plane_width );
@@ -243,11 +257,11 @@ void InitLists( ) {
                 // glTexCoord2f( (i+1)/plane_width, j/plane_width );
                 // glVertex3f( i*w+w, j*w, grid[i+1][j] );
                 
-            }
-            glEnd( );
-        }
-    glDisable( GL_TEXTURE_2D );
-    glEndList( );
+    //         }
+    //         glEnd( );
+    //     }
+    // glDisable( GL_TEXTURE_2D );
+    // glEndList( );
     
     // create the axes:
     InitAxesList();

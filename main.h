@@ -164,6 +164,7 @@ void    DoProjectMenu( int );
 void    DoShadowMenu();
 void    DoRasterString( float, float, float, char * );
 void    DoStrokeString( float, float, float, float, char * );
+void    DrawTerrain(int, GLfloat**);
 float   ElapsedSeconds( );
 int     GetAxesOn( );
 int     GetBiome( );
