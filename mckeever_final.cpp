@@ -27,7 +27,6 @@ float       Size = 1.f;
 GLfloat     **grid;
 unsigned char *Texture;
 GLuint      Tex;
-GLuint      height_buf;
 GLfloat     MaxVal;
 float       plane_width;
 
@@ -37,7 +36,23 @@ GLuint          Tex2;
 unsigned char   *Texture3;
 GLuint          Tex3;
 
-// draw the complete scene:
+unsigned char   *HeightTex;
+unsigned char   *DesertTex;
+unsigned char   *GrassTex;
+unsigned char   *ForestTex;
+GLuint          Heights;
+GLuint          Desert;
+GLuint          Grass;
+GLuint          Forest;
+
+
+void SetShaderTexture(GLuint texture, int textureUnit, int textureNum, char* varName) {
+    glActiveTexture( textureUnit );
+    glBindTexture( GL_TEXTURE_2D, texture );
+    Pattern->SetUniformVariable( varName, textureNum );
+}
+
+
 void DisplayCustom( ) {
     // draw the current object:
 
@@ -46,9 +61,19 @@ void DisplayCustom( ) {
     glBindTexture( GL_TEXTURE_2D, Tex );
     Pattern->SetUniformVariable( (char*)"uTexUnit", 5 );
     
-    glActiveTexture( GL_TEXTURE4 );
-    glBindTexture( GL_TEXTURE_2D, Tex2 );
-    Pattern->SetUniformVariable( (char*)"uTexUnit2", 4 );
+    int biome = GetBiome();
+    GLuint biomeTex;
+    
+    if (biome == DESERT) {
+        biomeTex = Desert;
+    } else if (biome == GRASSLAND) {
+        biomeTex = Grass;
+    } else {
+        biomeTex = Forest;
+    }
+    
+    SetShaderTexture(biomeTex, GL_TEXTURE2, 2, (char*)"uBiomeTex");
+    SetShaderTexture(Heights, GL_TEXTURE4, 4, (char*)"uHeights");
     
     Pattern->SetUniformVariable( (char*)"uRadius", RADIUS );
     Pattern->SetUniformVariable( (char*)"uWidth", plane_width );
@@ -56,8 +81,6 @@ void DisplayCustom( ) {
     glActiveTexture( GL_TEXTURE3 );
     glBindTexture( GL_TEXTURE_2D, Tex3 );
     Pattern->SetUniformVariable( (char*)"uTexUnit3", 3 );
-    
-    //Pattern->SetUniformVariable( (char*)"uTime",    GetCycleTime(CYCLE) );
     
     Pattern->SetUniformVariable( (char*)"uS0",      S0);
     Pattern->SetUniformVariable( (char*)"uT0",      T0);
@@ -154,6 +177,20 @@ float GetCycleTime( int ms_in_cycle ) {
 }
 
 
+void InitTexture(unsigned char *text, GLuint texture, char* varName) {
+    int width, height;
+    glGenTextures( 1, &texture );
+    text = BmpToTexture( (char*)varName, &width, &height );
+    
+    glBindTexture( GL_TEXTURE_2D, texture );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexImage2D( GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, text );
+}
+
+
 void InitGraphicsCustom( ) {
     int width, height;
     //int n = 9;
@@ -184,43 +221,41 @@ void InitGraphicsCustom( ) {
     }
     Pattern->SetVerbose( false );
     glPixelStorei (GL_UNPACK_ALIGNMENT, 1);
-    
-    // glGenBuffers( 1, &height_buf );
-    // glBindBuffer( GL_ARRAY_BUFFER, height_buf );
-    // glBufferData( GL_ARRAY_BUFFER, 3*sizeof(GLfloat)*numVertices, Vertices, GL_STATIC_DRAW );
-    // glEnableClientState( GL_VERTEX_ARRAY );
-    // glVertexPointer( 3, GL_FLOAT, 0, 0);
-    
-    Texture = BmpToTexture( (char*)"worldtex.bmp", &width, &height );
-    glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
-    glGenTextures( 1, &Tex );
-    // Texture = ArrToTexture( grid, plane_width, plane_width );//BmpToTexture( (char*)"moon.bmp", &width, &height );
-    
-    glBindTexture( GL_TEXTURE_2D, Tex ); // make the Tex0 texture current and set its parameters
+
+    DesertTex = BmpToTexture( (char*)"desert.bmp", &width, &height );
+    glGenTextures( 1, &Desert );
+    glBindTexture( GL_TEXTURE_2D, Desert ); // make the Tex0 texture current and set its parameters
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage2D( GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, Texture );
+    glTexImage2D( GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, DesertTex );
     
-    glGenTextures( 1, &Tex2 );
-    Texture2 = BmpToTexture( (char*)"trees2.bmp", &width, &height );
-    
-    glBindTexture( GL_TEXTURE_2D, Tex2 ); // make the Tex0 texture current and set its parameters
+    GrassTex = BmpToTexture( (char*)"grass.bmp", &width, &height );
+    glGenTextures( 1, &Grass );
+    glBindTexture( GL_TEXTURE_2D, Grass ); // make the Tex0 texture current and set its parameters
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage2D( GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, Texture2 );
+    glTexImage2D( GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, GrassTex );
     
-    
-    Texture3 = ArrToTexture( grid, plane_width, plane_width );//BmpToTexture( (char*)"moon.bmp", &width, &height );
-    glBindTexture( GL_TEXTURE_2D, Tex3 ); // make the Tex0 texture current and set its parameters
+    ForestTex = BmpToTexture( (char*)"trees2.bmp", &width, &height );
+    glGenTextures( 1, &Forest );
+    glBindTexture( GL_TEXTURE_2D, Forest ); // make the Tex0 texture current and set its parameters
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage2D( GL_TEXTURE_2D, 0, 3, plane_width, plane_width, 0, GL_RGB, GL_UNSIGNED_BYTE, Texture3 );
+    glTexImage2D( GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, ForestTex );
+    
+    HeightTex = ArrToTexture( grid, plane_width, plane_width );
+    glBindTexture( GL_TEXTURE_2D, Heights );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexImage2D( GL_TEXTURE_2D, 0, 3, plane_width, plane_width, 0, GL_RGB, GL_UNSIGNED_BYTE, HeightTex );
 }
 
 

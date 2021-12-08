@@ -3,13 +3,10 @@ out  vec3  vN;        // normal vector
 out  vec3  vL;        // vector from point to light
 out  vec3  vE;        // vector from point to eye
 
-vec3 LightPosition = vec3(  5., 5., 0. );
-
-uniform sampler2D uTexUnit;
-uniform float uRadius;
+uniform float uLightPosx, uLightPosy, uLightPosz;
+vec3 LightPosition = vec3( uLightPosx, uLightPosy, uLightPosz );
 uniform float uMaxVal;
-uniform sampler2D uTexUnit2;
-//uniform sampler2D uTexUnit3;
+uniform sampler2D uBiomeTex;
 
 out vec2  vST;        // texture coords
 out vec3 vColor;
@@ -27,10 +24,7 @@ void main() {
     vert = gl_Vertex.xyz;
     gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
 
-    
-    vec3 texcolor = texture( uTexUnit, vST ).rgb;
-    vec3 tex2color = texture( uTexUnit2, vST ).rgb;
-    //vec3 tex3color = texture( uTexUnit3, vST ).rgb;
+    vec3 biomeColor = texture( uBiomeTex, vST ).rgb;
 
     //vert.z = tex3color.r;
 
@@ -38,12 +32,11 @@ void main() {
     vST.t = vST.t*2.f;
     
     if (vert.z < 0.5f * uMaxVal) {
-        //vColor.rgb = texcolor;
         vColor.r = 24.f/255.f;
         vColor.g = 75.f/255.f;
         vColor.b = 100.f/255.f;
     } else if (vert.z < 0.8f * uMaxVal) {
-        vColor.rgb = tex2color;
+        vColor.rgb = biomeColor;
         //vColor.r = 0.f;
         //vColor.g = 0.5f;
         //vColor.b = 0.f;
@@ -57,21 +50,7 @@ void main() {
         vColor.g = 1.f;
         vColor.b = 1.f;
     }
-    
-    
-    //vec3 newcolor = texture( uTexUnit, vST ).rgb;
-    //vert.x = 1.f;
-    //vert.x = vert.x + newcolor.r * uRadius / 20.f;
-    //vert.y = vert.y + newcolor.r;
-    //vert.z = vert.z + newcolor.r;
-    //float x = vert.x;
-    //float z = vert.z;
-    //vert.x = x*cos(-PI/2.f) + z*sin(-PI/2.f);
-    //vert.z = -x*sin(-PI/2.f) + z*cos(-PI/2.f);
-    //vert.z = vert.z - uRadius;
-    //newcolor.r = newcolor.r/33.f;
 
-    
     vec4 ECposition = gl_ModelViewMatrix * vec4( vert, 1. );
     vN = normalize( gl_NormalMatrix * gl_Normal );    // normal vector
     vL = LightPosition - ECposition.xyz;        // vector from the point

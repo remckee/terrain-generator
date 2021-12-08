@@ -12,8 +12,7 @@ uniform float uExag;
 
 uniform float uSize;
 uniform float uMaxVal;
-uniform sampler2D uTexUnit2;
-uniform sampler2D uTexUnit3;
+uniform sampler2D uHeights;
 uniform float uWidth;
 
 const float DELTA = 0.001;
@@ -31,10 +30,10 @@ void main( ) {
     vec2 stp0 = vec2( DELTA, 0.f );
     vec2 st0p = vec2( 0.f, DELTA );
 
-    float west = texture( uTexUnit3, vST-stp0 ).r;
-    float east = texture( uTexUnit3, vST+stp0 ).r;
-    float south = texture( uTexUnit3, vST-st0p ).r;
-    float north = texture( uTexUnit3, vST+st0p ).r;
+    float west = texture( uHeights, vST-stp0 ).r;
+    float east = texture( uHeights, vST+stp0 ).r;
+    float south = texture( uHeights, vST-st0p ).r;
+    float north = texture( uHeights, vST+st0p ).r;
     
     vec3 s_tangent = vec3 (2.f * DELTA * uWidth, 0.f, uExag * (east - west));
     vec3 t_tangent = vec3 (0.f, 2.f * DELTA * uWidth, uExag * (north - south));
@@ -46,8 +45,6 @@ void main( ) {
     if (LightIntensity < 0.1) {
         LightIntensity = 0.1;
     }
-
-    //vec3 newcolor = texture( uTexUnit2, vST ).rgb;
 
     //vec3 Normal = normalize(vN);
     //vec3 Light     = normalize(vL);
