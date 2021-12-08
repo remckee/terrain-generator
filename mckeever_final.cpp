@@ -25,25 +25,19 @@ float       S0 = TEXTURE_FACTOR/2.f;
 float       T0 = S0;
 float       Size = 1.f;
 GLfloat     **grid;
-unsigned char *Texture;
-GLuint      Tex;
 GLfloat     MaxVal;
 float       plane_width;
-
-
-unsigned char   *Texture2;
-GLuint          Tex2;
-unsigned char   *Texture3;
-GLuint          Tex3;
 
 unsigned char   *HeightTex;
 unsigned char   *DesertTex;
 unsigned char   *GrassTex;
-unsigned char   *ForestTex;
+unsigned char   *TempForestTex;
+unsigned char   *ConfForestTex;
 GLuint          Heights;
 GLuint          Desert;
 GLuint          Grass;
-GLuint          Forest;
+GLuint          TempForest;
+GLuint          ConfForest;
 
 
 void SetShaderTexture(GLuint texture, int textureUnit, int textureNum, char* varName) {
@@ -54,13 +48,8 @@ void SetShaderTexture(GLuint texture, int textureUnit, int textureNum, char* var
 
 
 void DisplayCustom( ) {
-    // draw the current object:
-
     Pattern->Use( );
-    glActiveTexture( GL_TEXTURE5 );
-    glBindTexture( GL_TEXTURE_2D, Tex );
-    Pattern->SetUniformVariable( (char*)"uTexUnit", 5 );
-    
+
     int biome = GetBiome();
     GLuint biomeTex;
     
@@ -68,20 +57,16 @@ void DisplayCustom( ) {
         biomeTex = Desert;
     } else if (biome == GRASSLAND) {
         biomeTex = Grass;
+    } else if (biome == CONIFEROUS) {
+        biomeTex = ConfForest;
     } else {
-        biomeTex = Forest;
+        biomeTex = TempForest;
     }
     
     SetShaderTexture(biomeTex, GL_TEXTURE2, 2, (char*)"uBiomeTex");
     SetShaderTexture(Heights, GL_TEXTURE4, 4, (char*)"uHeights");
-    
-    Pattern->SetUniformVariable( (char*)"uRadius", RADIUS );
+
     Pattern->SetUniformVariable( (char*)"uWidth", plane_width );
-    
-    glActiveTexture( GL_TEXTURE3 );
-    glBindTexture( GL_TEXTURE_2D, Tex3 );
-    Pattern->SetUniformVariable( (char*)"uTexUnit3", 3 );
-    
     Pattern->SetUniformVariable( (char*)"uS0",      S0);
     Pattern->SetUniformVariable( (char*)"uT0",      T0);
     Pattern->SetUniformVariable( (char*)"uColor",   0.4f, 0.f, 0.f );
@@ -240,14 +225,23 @@ void InitGraphicsCustom( ) {
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexImage2D( GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, GrassTex );
     
-    ForestTex = BmpToTexture( (char*)"trees2.bmp", &width, &height );
-    glGenTextures( 1, &Forest );
-    glBindTexture( GL_TEXTURE_2D, Forest ); // make the Tex0 texture current and set its parameters
+    TempForestTex = BmpToTexture( (char*)"trees2.bmp", &width, &height );
+    glGenTextures( 1, &TempForest );
+    glBindTexture( GL_TEXTURE_2D, TempForest ); // make the Tex0 texture current and set its parameters
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage2D( GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, ForestTex );
+    glTexImage2D( GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, TempForestTex );
+    
+    ConfForestTex = BmpToTexture( (char*)"trees.bmp", &width, &height );
+    glGenTextures( 1, &ConfForest );
+    glBindTexture( GL_TEXTURE_2D, ConfForest ); // make the Tex0 texture current and set its parameters
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexImage2D( GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, ConfForestTex );
     
     HeightTex = ArrToTexture( grid, plane_width, plane_width );
     glBindTexture( GL_TEXTURE_2D, Heights );
@@ -274,9 +268,9 @@ int RedrawGrid() {
     GLfloat corners[][2] = {2.f, 5.f, 3.f, 7.f};
     int dim = diamond_square(&grid, N, corners, 0.5f, &MaxVal) - 1;
 
-    Texture3 = ArrToTexture( grid, plane_width, plane_width );
-    glBindTexture( GL_TEXTURE_2D, Tex3 ); // make the Tex0 texture current and set its parameters
-    glTexImage2D( GL_TEXTURE_2D, 0, 3, plane_width, plane_width, 0, GL_RGB, GL_UNSIGNED_BYTE, Texture3 );
+    HeightTex = ArrToTexture( grid, plane_width, plane_width );
+    glBindTexture( GL_TEXTURE_2D, Heights );
+    glTexImage2D( GL_TEXTURE_2D, 0, 3, plane_width, plane_width, 0, GL_RGB, GL_UNSIGNED_BYTE, HeightTex );
 
     return dim;
 }

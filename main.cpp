@@ -452,6 +452,7 @@ void InitMenus( ) {
 
     int biomemenu = glutCreateMenu( DoBiomeMenu );
     //glutAddMenuEntry( "Coastal",                COASTAL );
+    glutAddMenuEntry( "Coniferous forest",      CONIFEROUS );
     glutAddMenuEntry( "Desert",                 DESERT );
     glutAddMenuEntry( "Grassland",              GRASSLAND );
     glutAddMenuEntry( "Temperate forest",       TEMPERATE );

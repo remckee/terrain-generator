@@ -117,6 +117,7 @@ enum Colors  {
 
 enum Biomes {
     //COASTAL,
+    CONIFEROUS,
     DESERT,
     GRASSLAND,
     TEMPERATE//,
