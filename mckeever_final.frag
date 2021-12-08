@@ -1,16 +1,11 @@
 #version 330 compatibility
 
 uniform float   uKa, uKd, uKs;  // coefficients of each type of lighting
-uniform vec3  uColor;           // object color
 uniform vec3  uSpecularColor;   // light color
 uniform float   uShininess;     // specular exponent
 uniform float uLightPosx, uLightPosy, uLightPosz;
-
-uniform float uS0;
-uniform float uT0;
 uniform float uExag;
 
-uniform float uSize;
 uniform float uMaxVal;
 uniform sampler2D uHeights;
 uniform float uWidth;

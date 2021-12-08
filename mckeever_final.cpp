@@ -10,19 +10,12 @@ Final Project
 const char* VERT_SHADER = "mckeever_final.vert";
 const char* FRAG_SHADER = "mckeever_final.frag";
 
-const GLfloat RADIUS = 10.f;
-
-const GLfloat PLANE_UNIT = 256.f;   // Number of 'pixels' per unit in drawing space
-const GLfloat TEXTURE_FACTOR = 17.f;
 const int N = 8;
 
 // non-constant global variables:
 GLuint      SphereList;             // object display list
 GLuint      PlaneList;              // display list for base rectangle for terrain
 GLSLProgram *Pattern;
-float       S0 = TEXTURE_FACTOR/2.f;
-float       T0 = S0;
-float       Size = 1.f;
 GLfloat     **grid;
 GLfloat     MaxVal;
 float       plane_width;
@@ -62,10 +55,6 @@ void DisplayCustom( ) {
     Pattern->SetUniformVariable( (char*)"uGround", data.ground_elevation );
     Pattern->SetUniformVariable( (char*)"uMountain", data.mountain_elevation );
     Pattern->SetUniformVariable( (char*)"uWidth", plane_width );
-    Pattern->SetUniformVariable( (char*)"uS0",      S0);
-    Pattern->SetUniformVariable( (char*)"uT0",      T0);
-    Pattern->SetUniformVariable( (char*)"uColor",   0.4f, 0.f, 0.f );
-    Pattern->SetUniformVariable( (char*)"uSize",    Size );
     Pattern->SetUniformVariable( (char*)"uKa",      0.5f );
     Pattern->SetUniformVariable( (char*)"uKd",      0.6f );
     Pattern->SetUniformVariable( (char*)"uKs",      0.2f );
@@ -79,7 +68,7 @@ void DisplayCustom( ) {
     Pattern->SetUniformVariable( (char*)"uExag",1.f);
     
     // Draw baseline plane of terrain
-    GLfloat w = 0.2f;
+    GLfloat w = 0.3f;
     glColor3f( 1.f, 1.f, 1.f );
     glEnable( GL_TEXTURE_2D );
         int offset = plane_width/2;
@@ -102,7 +91,7 @@ void DisplayCustom( ) {
             for (int j = 0; j < plane_width; j++) {
                 glTexCoord2f( (i)/plane_width, (j)/plane_width );
                 glNormal3f( 0.f, 0.f, 1.f );
-                glVertex3f( i*w-offset*w, j*w-offset*w, grid[i+1][j]+0.1f );
+                glVertex3f( i*w-offset*w, j*w-offset*w, grid[i+1][j] );
 
                 glTexCoord2f( (i)/plane_width, (j)/plane_width );
                 glNormal3f( 0.f, 0.f, 1.f );
@@ -117,7 +106,7 @@ void DisplayCustom( ) {
             for (int i = 0; i < plane_width; i++) {
                 glTexCoord2f( (i)/plane_width, (j)/plane_width );
                 glNormal3f( 0.f, 0.f, 1.f );
-                glVertex3f( i*w-offset*w, j*w-offset*w, grid[i+1][j]+0.1f );
+                glVertex3f( i*w-offset*w, j*w-offset*w, grid[i+1][j] );
 
                 glTexCoord2f( (i)/plane_width, (j)/plane_width );
                 glNormal3f( 0.f, 0.f, 1.f );
@@ -168,8 +157,8 @@ struct BiomeData GetBiomeData() {
         data.ground_elevation   = 0.9f;
         data.mountain_elevation = 0.95f;
     } else {
-        data.h = 0.6f;
-        data.variance = 1.f;
+        data.h = 0.9f;
+        data.variance = 1.5f;
         data.texture = (biome == CONIFEROUS) ? ConfForest : TempForest;
         
         if (biome == CONIFEROUS) {

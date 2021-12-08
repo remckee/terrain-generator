@@ -38,16 +38,11 @@ void main() {
         vColor.r = BLUE.r;
         vColor.g = BLUE.g;
         vColor.b = BLUE.b;
+        vert.z = vert.z * 0.9f;
     } else if (vert.z < uGround * uMaxVal) {
         vColor.rgb = biomeColor;
-        //vColor.r = 0.f;
-        //vColor.g = 0.5f;
-        //vColor.b = 0.f;
     } else if (vert.z < uMountain * uMaxVal) {
         vColor.rgb = mountainColor;
-        //vColor.r = BROWN.r;
-        //vColor.g = BROWN.g;
-        //vColor.b = BROWN.b;
     } else {
         vColor.r = WHITE.r;
         vColor.g = WHITE.g;

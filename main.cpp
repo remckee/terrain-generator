@@ -33,7 +33,7 @@ float       Xrot, Yrot;             // rotation angles in degrees
 
 bool        vertAnimation;
 bool        fragAnimation;
-float       eyex = 0.f, eyey = 0.f, eyez = 35.f;
+float       eyex = 0.f, eyey = 0.f, eyez = 50.f;
 
 
 // main program:
@@ -507,6 +507,11 @@ void Keyboard( unsigned char c, int x, int y ) {
 
     switch( c )
     {
+        case 'a':
+        case 'A':
+            eyex -= 5.f;
+            break;
+
         // animate both fragments and vertices
         case 'b':
             Frozen = false;
@@ -515,26 +520,18 @@ void Keyboard( unsigned char c, int x, int y ) {
             glutIdleFunc( Animate );
             break;
 
+        case 'd':
+        case 'D':
+            eyex += 5.f;
+            break;
+
         case 'f':
+        case 'F':
             Frozen = ! Frozen;
             if( Frozen )
                 glutIdleFunc( NULL );
             else
                 glutIdleFunc( Animate );
-            break;
-
-        // animate fragments, freeze vertex animation
-        case 'F':
-            fragAnimation = true;
-            vertAnimation = false;
-            glutIdleFunc( Animate );
-            break;
-
-        // animate vertices, freeze fragment animation
-        case 'V':
-            fragAnimation = false;
-            vertAnimation = true;
-            glutIdleFunc( Animate );
             break;
 
         case 'o':
@@ -553,11 +550,33 @@ void Keyboard( unsigned char c, int x, int y ) {
             DoMainMenu( QUIT );    // will not return here
             break;                // happy compiler
 
-        case 's':
-        case 'S':
-            
+        case 'r':
+        case 'R':
+            RedrawGrid( );
             break;
 
+        case 's':
+        case 'S':
+            eyez -= 5.f;
+            break;
+
+        case 'w':
+        case 'W':
+            eyey += 5.f;
+            break;
+
+        case 'x':
+        case 'X':
+            eyez += 5.f;
+            break;
+            
+        case 'z':
+        case 'Z':
+            eyey -= 5.f;
+            break;
+            
+
+            
         default:
             fprintf( stderr, "Don't know what to do with keyboard hit: '%c' (0x%0x)\n", c, c );
     }

@@ -58,14 +58,7 @@ int diamond_square(GLfloat ***grid, int num, GLfloat max_var, GLfloat *max_val, 
             }
         }
     }
-    
-    // set random points
-    GLfloat center = rand_GLfloat(*max_val+max_var) * pow(2, -h);
-    (*grid)[dim/2][dim/2] = center;
-    if ((*grid)[dim/2][dim/2] > *max_val) {
-        *max_val = center;
-    }
-    
+
     while (square > 1) {
         diamond_step(grid, dim, square, max_var, max_val, h);
         square_step(grid, dim, square, max_var, max_val, h);
