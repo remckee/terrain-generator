@@ -5,8 +5,8 @@ Final Project
 **********************/
 
 #include "diamond_square.h"
-#define INIT_VAL    -1.f
-#define h           0.05
+#define INIT_VAL            -1.f
+#define MAX_RAND_INPUT      10.f
 
 
 int allocate_grid(GLfloat ***grid, int num) {
@@ -36,7 +36,15 @@ void deallocate(GLfloat **array, int dim) {
 }
 
 
-int diamond_square(GLfloat ***grid, int num, GLfloat corner_vals[][DIMS], GLfloat max_var, GLfloat *max_val) {
+int diamond_square(GLfloat ***grid, int num, GLfloat max_var, GLfloat *max_val, GLfloat h) {
+    GLfloat corner_vals[DIMS][DIMS];
+    
+    for (int i = 0; i < DIMS; i++) {
+        for (int j = 0; j < DIMS; j++) {
+            corner_vals[i][j] = rand_GLfloat(MAX_RAND_INPUT);
+        }
+    }
+
     int dim = allocate_grid(grid, num);
     init_grid(grid, dim);
     init_corners(grid, dim, corner_vals);
@@ -59,8 +67,8 @@ int diamond_square(GLfloat ***grid, int num, GLfloat corner_vals[][DIMS], GLfloa
     }
     
     while (square > 1) {
-        diamond_step(grid, dim, square, max_var, max_val);
-        square_step(grid, dim, square, max_var, max_val);
+        diamond_step(grid, dim, square, max_var, max_val, h);
+        square_step(grid, dim, square, max_var, max_val, h);
         square /= 2;
     }
     
@@ -74,14 +82,14 @@ int diamond_square(GLfloat ***grid, int num, GLfloat corner_vals[][DIMS], GLfloa
 }
 
 
-int diamond_step(GLfloat ***grid, int dim, int square, GLfloat max_var, GLfloat *max_val) {
+int diamond_step(GLfloat ***grid, int dim, int square, GLfloat max_var, GLfloat *max_val, GLfloat h) {
     for (int i = 0; i < dim-1; i+=square) {
         for (int j = 0; j < dim-1; j+=square) {
             if ((*grid)[i+square/2][j+square/2]==INIT_VAL) {
                 GLfloat **vals;
                 int corner_indices[CORNERS] = {i, j, i+square, j+square};
                 get_square_corners(*grid, &vals, corner_indices);
-                GLfloat mp = midpoint(vals, max_var);
+                GLfloat mp = midpoint(vals, max_var, h);
                 (*grid)[i+square/2][j+square/2] = mp;
                 if (mp > *max_val) {
                     *max_val = mp;
@@ -165,7 +173,7 @@ void init_grid(GLfloat ***grid, int dim) {
 }
 
 // Add a random value of at most max_var to the average of vals
-GLfloat midpoint(GLfloat **vals, GLfloat max_var) {
+GLfloat midpoint(GLfloat **vals, GLfloat max_var, GLfloat h) {
     GLfloat ave = 0;
     for (int i = 0; i < DIMS; i++) {
         for (int j = 0; j < DIMS; j++) {
@@ -203,14 +211,14 @@ void set_corners(GLfloat ***grid, GLfloat vals[][DIMS], int corner_indices[CORNE
 }
 
 
-int square_step(GLfloat ***grid, int dim, int square, GLfloat max_var, GLfloat *max_val) {
+int square_step(GLfloat ***grid, int dim, int square, GLfloat max_var, GLfloat *max_val, GLfloat h) {
     for (int i = 0, k = 1; i < dim; i+=square/2, k++) {
         for (int j = (k%2)*square/2; j < dim; j+=square) {
             if ((*grid)[i][j]==INIT_VAL) {
                 GLfloat **vals;
                 int mid_indices[DIMS] = {i, j};
                 get_diamond_corners(*grid, dim, square/2, &vals, mid_indices);
-                GLfloat mp = midpoint(vals, max_var);
+                GLfloat mp = midpoint(vals, max_var, h);
                 (*grid)[i][j] = mp;
                 if (mp > *max_val) {
                     *max_val = mp;

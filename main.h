@@ -52,6 +52,16 @@ Final Project
 // be array sizes or cases in switch( ) statements.  Those are #defines.
 
 
+struct BiomeData {
+    GLfloat h;
+    GLfloat variance;
+    GLuint  texture;
+    float   water_elevation;      // these are the maximum elevations for water/ground/mountains
+    float   ground_elevation;
+    float   mountain_elevation;
+};
+
+
 // initial window size:
 const int INIT_WINDOW_SIZE = { 600 };
 
@@ -170,6 +180,7 @@ void    DrawTerrain(int, GLfloat**);
 float   ElapsedSeconds( );
 int     GetAxesOn( );
 int     GetBiome( );
+struct BiomeData  GetBiomeData( );
 int     GetDebugOn( );
 int     GetDepthCueOn( );
 int     GetDepthBufferOn( );

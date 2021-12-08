@@ -215,6 +215,7 @@ void DoDepthMenu( int id ) {
 
 void DoBiomeMenu( int id ) {
     WhichBiome = id;
+    RedrawGrid();
     Redisplay();
 }
 

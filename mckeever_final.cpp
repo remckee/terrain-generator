@@ -50,19 +50,9 @@ void SetShaderTexture(GLuint texture, int textureUnit, int textureNum, char* var
 void DisplayCustom( ) {
     Pattern->Use( );
 
-    int biome = GetBiome();
-    GLuint biomeTex;
-    
-    if (biome == DESERT) {
-        biomeTex = Desert;
-    } else if (biome == GRASSLAND) {
-        biomeTex = Grass;
-    } else if (biome == CONIFEROUS) {
-        biomeTex = ConfForest;
-    } else {
-        biomeTex = TempForest;
-    }
-    
+    struct BiomeData data = GetBiomeData();
+    GLuint biomeTex = data.texture;
+
     SetShaderTexture(biomeTex, GL_TEXTURE2, 2, (char*)"uBiomeTex");
     SetShaderTexture(Heights, GL_TEXTURE4, 4, (char*)"uHeights");
 
@@ -153,6 +143,25 @@ void DisplayCustom( ) {
     Pattern->UnUse( );
 }
 
+struct BiomeData GetBiomeData() {
+    struct BiomeData data;
+    int biome = GetBiome();
+    
+    if (biome == DESERT) {
+        data.h = 0.8f;
+        data.variance = 0.5f;
+        data.texture = Desert;
+    } else if (biome == GRASSLAND) {
+        data.h = 1.f;
+        data.variance = 0.75f;
+        data.texture = Grass;
+    } else {
+        data.h = 0.6f;
+        data.variance = 1.f;
+        data.texture = (biome == CONIFEROUS) ? ConfForest : TempForest;
+    }
+    return data;
+}
 
 // return a value for current point in animation cycle, scaled from 0.0 to 1.0
 float GetCycleTime( int ms_in_cycle ) {
@@ -178,17 +187,6 @@ void InitTexture(unsigned char *text, GLuint texture, char* varName) {
 
 void InitGraphicsCustom( ) {
     int width, height;
-    //int n = 9;
-    // GLfloat corners[][2] = {1.f, 4.f, 10.f, 2.f};
-    // int plane_width = diamond_square(&grid, N, corners, 5.f);
-    // print_grid(grid, plane_width);
-
-    // int numVertices = 2;
-    // GLfloat Vertices[ ][3] =
-    // {
-    //     { 1., 2., 3. },
-    //     { 4., 5., 6. }
-    // };
     plane_width = RedrawGrid();
 
     // do this *after* opening the window and init'ing glew:
@@ -265,8 +263,8 @@ int RedrawGrid() {
         deallocate(grid, plane_width);
     }
 
-    GLfloat corners[][2] = {2.f, 5.f, 3.f, 7.f};
-    int dim = diamond_square(&grid, N, corners, 0.5f, &MaxVal) - 1;
+    struct BiomeData data = GetBiomeData();
+    int dim = diamond_square(&grid, N, data.variance, &MaxVal, data.h) - 1;
 
     HeightTex = ArrToTexture( grid, plane_width, plane_width );
     glBindTexture( GL_TEXTURE_2D, Heights );

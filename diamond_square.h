@@ -26,18 +26,18 @@ Final Project
 
 int allocate_grid(GLfloat ***, int);
 void deallocate(GLfloat **, int);
-int diamond_square(GLfloat ***, int, GLfloat[][DIMS], GLfloat, GLfloat*);
-int diamond_step(GLfloat ***, int, int, GLfloat, GLfloat*);
+int diamond_square(GLfloat ***, int, GLfloat, GLfloat*, GLfloat);
+int diamond_step(GLfloat ***, int, int, GLfloat, GLfloat*, GLfloat);
 int dimension(int);
 void get_diamond_corners(GLfloat **, int, int, GLfloat ***, int[CORNERS]);
 void get_square_corners(GLfloat **, GLfloat ***, int[DIMS]);
 void init_corners(GLfloat ***, int, GLfloat[][DIMS]);
 void init_grid(GLfloat ***, int);
-GLfloat midpoint(GLfloat **, GLfloat);
+GLfloat midpoint(GLfloat **, GLfloat, GLfloat);
 void print_grid(GLfloat **, int);
 GLfloat rand_GLfloat(GLfloat);
 void set_corners(GLfloat ***, GLfloat[][DIMS], int[DIMS]);
-int square_step(GLfloat ***, int, int, GLfloat, GLfloat*);
+int square_step(GLfloat ***, int, int, GLfloat, GLfloat*, GLfloat);
 int wrap_aroundx(GLfloat **, int, int, int, int);
 int wrap_aroundy(GLfloat **, int, int, int, int);
 
