@@ -17,7 +17,6 @@ const GLfloat TEXTURE_FACTOR = 17.f;
 const int N = 8;
 
 // non-constant global variables:
-//int         plane_width;
 GLuint      SphereList;             // object display list
 GLuint      PlaneList;              // display list for base rectangle for terrain
 GLSLProgram *Pattern;
@@ -33,11 +32,13 @@ unsigned char   *DesertTex;
 unsigned char   *GrassTex;
 unsigned char   *TempForestTex;
 unsigned char   *ConfForestTex;
+unsigned char   *MountainTex;
 GLuint          Heights;
 GLuint          Desert;
 GLuint          Grass;
 GLuint          TempForest;
 GLuint          ConfForest;
+GLuint          Mountain;
 
 
 void SetShaderTexture(GLuint texture, int textureUnit, int textureNum, char* varName) {
@@ -54,8 +55,12 @@ void DisplayCustom( ) {
     GLuint biomeTex = data.texture;
 
     SetShaderTexture(biomeTex, GL_TEXTURE2, 2, (char*)"uBiomeTex");
+    SetShaderTexture(Mountain, GL_TEXTURE3, 3, (char*)"uMountainTex");
     SetShaderTexture(Heights, GL_TEXTURE4, 4, (char*)"uHeights");
 
+    Pattern->SetUniformVariable( (char*)"uWater", data.water_elevation );
+    Pattern->SetUniformVariable( (char*)"uGround", data.ground_elevation );
+    Pattern->SetUniformVariable( (char*)"uMountain", data.mountain_elevation );
     Pattern->SetUniformVariable( (char*)"uWidth", plane_width );
     Pattern->SetUniformVariable( (char*)"uS0",      S0);
     Pattern->SetUniformVariable( (char*)"uT0",      T0);
@@ -151,14 +156,33 @@ struct BiomeData GetBiomeData() {
         data.h = 0.8f;
         data.variance = 0.5f;
         data.texture = Desert;
+        data.water_elevation    = 0.15f;
+        data.ground_elevation   = 0.9f;
+        data.mountain_elevation = 1.f;
+        
     } else if (biome == GRASSLAND) {
         data.h = 1.f;
         data.variance = 0.75f;
         data.texture = Grass;
+        data.water_elevation    = 0.5f;
+        data.ground_elevation   = 0.9f;
+        data.mountain_elevation = 0.95f;
     } else {
         data.h = 0.6f;
         data.variance = 1.f;
         data.texture = (biome == CONIFEROUS) ? ConfForest : TempForest;
+        
+        if (biome == CONIFEROUS) {
+            data.texture = ConfForest;
+            data.water_elevation    = 0.35f;
+            data.ground_elevation   = 0.65f;
+            data.mountain_elevation = 0.83f;
+        } else {
+            data.texture = TempForest;
+            data.water_elevation    = 0.4f;
+            data.ground_elevation   = 0.75f;
+            data.mountain_elevation = 0.9f;
+        }
     }
     return data;
 }
@@ -190,7 +214,6 @@ void InitGraphicsCustom( ) {
     plane_width = RedrawGrid();
 
     // do this *after* opening the window and init'ing glew:
-
     Pattern = new GLSLProgram( );
     bool valid = Pattern->Create( (char*)VERT_SHADER, (char*)FRAG_SHADER );
     if( ! valid )
@@ -207,7 +230,7 @@ void InitGraphicsCustom( ) {
 
     DesertTex = BmpToTexture( (char*)"desert.bmp", &width, &height );
     glGenTextures( 1, &Desert );
-    glBindTexture( GL_TEXTURE_2D, Desert ); // make the Tex0 texture current and set its parameters
+    glBindTexture( GL_TEXTURE_2D, Desert );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
@@ -216,7 +239,7 @@ void InitGraphicsCustom( ) {
     
     GrassTex = BmpToTexture( (char*)"grass.bmp", &width, &height );
     glGenTextures( 1, &Grass );
-    glBindTexture( GL_TEXTURE_2D, Grass ); // make the Tex0 texture current and set its parameters
+    glBindTexture( GL_TEXTURE_2D, Grass );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
@@ -225,7 +248,7 @@ void InitGraphicsCustom( ) {
     
     TempForestTex = BmpToTexture( (char*)"trees2.bmp", &width, &height );
     glGenTextures( 1, &TempForest );
-    glBindTexture( GL_TEXTURE_2D, TempForest ); // make the Tex0 texture current and set its parameters
+    glBindTexture( GL_TEXTURE_2D, TempForest );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
@@ -234,12 +257,21 @@ void InitGraphicsCustom( ) {
     
     ConfForestTex = BmpToTexture( (char*)"trees.bmp", &width, &height );
     glGenTextures( 1, &ConfForest );
-    glBindTexture( GL_TEXTURE_2D, ConfForest ); // make the Tex0 texture current and set its parameters
+    glBindTexture( GL_TEXTURE_2D, ConfForest );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexImage2D( GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, ConfForestTex );
+    
+    MountainTex = BmpToTexture( (char*)"mountain.bmp", &width, &height );
+    glGenTextures( 1, &Mountain );
+    glBindTexture( GL_TEXTURE_2D, Mountain );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexImage2D( GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, MountainTex );
     
     HeightTex = ArrToTexture( grid, plane_width, plane_width );
     glBindTexture( GL_TEXTURE_2D, Heights );
@@ -274,69 +306,7 @@ int RedrawGrid() {
 }
 
 
-// initialize the display lists that will not change:
-// (a display list is a way to store opengl commands in
-//  memory so that they can be played back efficiently at a later time
-//  with a call to glCallList( )
 void InitLists( ) {
-    SphereList = glGenLists( 1 );
-    glNewList( SphereList, GL_COMPILE );
-        OsuSphere( RADIUS, 100.f, 100.f, TEXTURE_FACTOR);
-        //OsuCone( 1.f, 1.f, RADIUS, 100, 100, 17.f );
-    glEndList( );
-
-    // Draw baseline plane of terrain
-    // GLfloat w = 0.2f;
-    // glColor3f( 1.f, 1.f, 1.f );
-    // PlaneList = glGenLists( 1 );
-    // glNewList( PlaneList, GL_COMPILE );
-    // glEnable( GL_TEXTURE_2D );
-        //float plane_width = (float)RedrawGrid();
-    //     int offset = plane_width/2;
-        //print_grid(grid, plane_width);
-
-        //glutSolidCube(1.f);
-    //     for (int i = 0; i < plane_width - 1; i++) {
-    //         glBegin(GL_TRIANGLE_STRIP);
-    //         for (int j = 0; j < plane_width; j++) {
-                // glTexCoord2f( 1.f, 0.f );
-                // glNormal3f( 0.f, 0.f, 1.f );
-                // glVertex3f( plane_width*w-offset*w, -offset*w, 0.f );
-
-                // glTexCoord2f( 0.f, 0.f );
-                // glNormal3f( 0.f, 0.f, 1.f );
-                // glVertex3f( -offset*w, -offset*w, 0.f );
-            
-                // glTexCoord2f( 1.f, 1.f );
-                // glNormal3f( 0.f, 0.f, 1.f );
-                // glVertex3f( plane_width*w-offset*w, plane_width*w-offset*w, 0.f );
-
-                // glTexCoord2f( 0.f, 1.f );
-                // glNormal3f( 0.f, 0.f, 1.f );
-                // glVertex3f( -offset*w, plane_width*w-offset*w, 0.f );
-                
-    //             glTexCoord2f( (i+1)/plane_width, (j)/plane_width );
-    //             glNormal3f( 0.f, 0.f, 1.f );
-    //             glVertex3f( i*w+w-offset*w, j*w-offset*w, grid[i+1][j] );
-
-    //             glTexCoord2f( (i)/plane_width, (j)/plane_width );
-    //             glNormal3f( 0.f, 0.f, 1.f );
-    //             glVertex3f( i*w-offset*w, j*w-offset*w, grid[i][j] );
-            
-                // glNormal3f( 0.f, 0.f, 1.f );
-                // glTexCoord2f( (i+1)/plane_width, (j+1)/plane_width );
-                // glVertex3f( i*w+w, j*w+w, grid[i+1][j+1] );
-            
-                // glNormal3f( 0.f, 0.f, 1.f );
-                // glTexCoord2f( (i+1)/plane_width, j/plane_width );
-                // glVertex3f( i*w+w, j*w, grid[i+1][j] );
-                
-    //         }
-    //         glEnd( );
-    //     }
-    // glDisable( GL_TEXTURE_2D );
-    // glEndList( );
-    
     // create the axes:
     InitAxesList();
 }
@@ -355,7 +325,7 @@ unsigned char *ArrToTexture( GLfloat **array, int width, int height ) {
     unsigned char *tp;
     for( t = 0, tp = texture; t < height; t++ ) {
         for( int s = 0; s < width; s++, tp += 3 ) {
-            char ch = (char)(256 * array[t][s]);
+            char ch = (char)(256 * array[t][s]/MaxVal);
             *(tp+0) = ch;        // r
             *(tp+1) = ch;        // g
             *(tp+2) = ch;        // b
