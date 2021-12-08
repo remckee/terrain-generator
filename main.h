@@ -116,12 +116,12 @@ enum Colors  {
 
 
 enum Biomes {
-    COASTAL,
+    //COASTAL,
     DESERT,
     GRASSLAND,
-    TEMPERATE,
-    TUNDRA,
-    TROPICAL
+    TEMPERATE//,
+    //TUNDRA,
+    //TROPICAL
 };
 
 
@@ -164,6 +164,7 @@ void    DoProjectMenu( int );
 void    DoShadowMenu();
 void    DoRasterString( float, float, float, char * );
 void    DoStrokeString( float, float, float, float, char * );
+int     DrawGrid();
 void    DrawTerrain(int, GLfloat**);
 float   ElapsedSeconds( );
 int     GetAxesOn( );
@@ -180,6 +181,7 @@ void    InitGraphicsCustom( );
 void    InitLists( );
 void    InitAxesList( );
 void    InitMenus( );
+void    InitTexture(unsigned char *, GLuint, char*);
 void    Keyboard( unsigned char, int, int );
 void    MouseButton( int, int, int, int );
 void    MouseMotion( int, int );
@@ -194,6 +196,7 @@ void    SetDepthCueOn(int);
 void    SetDepthBufferOn(int);
 void    SetDepthFightingOn(int);
 void    SetFragAnimation(bool);
+void    SetShaderTexture(GLuint, int, int, char*);
 void    SetVertAnimation(bool);
 void    Visibility( int );
 

@@ -37,7 +37,7 @@ void main() {
     vST.s = vST.s*2.f;
     vST.t = vST.t*2.f;
     
-    if (vert.z < 0.7f * uMaxVal) {
+    if (vert.z < 0.5f * uMaxVal) {
         //vColor.rgb = texcolor;
         vColor.r = 24.f/255.f;
         vColor.g = 75.f/255.f;

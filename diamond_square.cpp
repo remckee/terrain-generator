@@ -66,7 +66,7 @@ int diamond_square(GLfloat ***grid, int num, GLfloat corner_vals[][DIMS], GLfloa
     
     // for (int i = 0; i < dim; i++) {
     //     for (int j = 0; j < dim; j++) {
-    //         (*grid)[i][j] = (*grid)[i][j]/max_val;
+    //         (*grid)[i][j] = (*grid)[i][j]/(*max_val);
     //     }
     // }
 

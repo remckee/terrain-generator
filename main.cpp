@@ -33,6 +33,7 @@ float       Xrot, Yrot;             // rotation angles in degrees
 
 bool        vertAnimation;
 bool        fragAnimation;
+float       eyex = 0.f, eyey = 0.f, eyez = 35.f;
 
 
 // main program:
@@ -128,7 +129,7 @@ void Display( ) {
     glLoadIdentity( );
 
     // set the eye position, look-at position, and up-vector:
-    gluLookAt( 0., 0., 35.,     0., 0., 0.,     0., 1., 0. );
+    gluLookAt( eyex, eyey, eyez,     0., 0., 0.,     0., 1., 0. );
 
     // rotate the scene:
     glRotatef( (GLfloat)Yrot, 0., 1., 0. );
@@ -450,12 +451,12 @@ void InitMenus( ) {
     glutAddMenuEntry( "On",   1 );
 
     int biomemenu = glutCreateMenu( DoBiomeMenu );
-    glutAddMenuEntry( "Coastal",                COASTAL );
+    //glutAddMenuEntry( "Coastal",                COASTAL );
     glutAddMenuEntry( "Desert",                 DESERT );
     glutAddMenuEntry( "Grassland",              GRASSLAND );
     glutAddMenuEntry( "Temperate forest",       TEMPERATE );
-    glutAddMenuEntry( "Tropical rainforest",    TROPICAL );
-    glutAddMenuEntry( "Tundra",                 TUNDRA );
+    //glutAddMenuEntry( "Tropical rainforest",    TROPICAL );
+    //glutAddMenuEntry( "Tundra",                 TUNDRA );
     
     int depthcuemenu = glutCreateMenu( DoDepthMenu );
     glutAddMenuEntry( "Off",  0 );
@@ -549,6 +550,11 @@ void Keyboard( unsigned char c, int x, int y ) {
         case ESCAPE:
             DoMainMenu( QUIT );    // will not return here
             break;                // happy compiler
+
+        case 's':
+        case 'S':
+            
+            break;
 
         default:
             fprintf( stderr, "Don't know what to do with keyboard hit: '%c' (0x%0x)\n", c, c );
@@ -654,7 +660,7 @@ void Redisplay( ) {
 // the glut main loop is responsible for redrawing the scene
 void Reset( ) {
     ActiveButton = 0;
-    AxesOn = 1;
+    AxesOn = 0;
     DebugOn = 0;
     DepthBufferOn = 1;
     DepthFightingOn = 0;
