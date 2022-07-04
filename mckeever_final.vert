@@ -8,6 +8,7 @@ vec3 LightPosition = vec3( uLightPosx, uLightPosy, uLightPosz );
 uniform float uMaxVal;
 uniform sampler2D uBiomeTex;
 uniform sampler2D uMountainTex;
+uniform sampler2D uHeights;
 uniform float uWater;
 uniform float uGround;
 uniform float uMountain;
@@ -15,6 +16,7 @@ uniform float uMountain;
 out vec2  vST;        // texture coords
 out vec3 vColor;
 out vec3 vert;
+out vec3 vNormal;
 
 const float PI = 3.14159265;
 
@@ -30,6 +32,12 @@ void main() {
 
     vec3 biomeColor = texture( uBiomeTex, vST ).rgb;
     vec3 mountainColor = texture( uMountainTex, vST ).rgb;
+
+    vec3 norm = normalize( gl_Normal );
+    vNormal = normalize( gl_NormalMatrix * gl_Normal );
+    float disp = texture( uHeights, vST ).r;
+    disp *= uMaxVal;
+    vert += norm * disp;
 
     vST.s = vST.s*2.f;
     vST.t = vST.t*2.f;

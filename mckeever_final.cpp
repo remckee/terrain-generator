@@ -77,21 +77,7 @@ void DisplayCustom( ) {
             for (int j = 0; j < plane_width; j++) {
                 glTexCoord2f( (i+1)/plane_width, (j)/plane_width );
                 glNormal3f( 0.f, 0.f, 1.f );
-                glVertex3f( i*w+w-offset*w, j*w-offset*w, grid[i+1][j] );
-
-                glTexCoord2f( (i)/plane_width, (j)/plane_width );
-                glNormal3f( 0.f, 0.f, 1.f );
-                glVertex3f( i*w-offset*w, j*w-offset*w, grid[i][j] );
-            }
-            glEnd( );
-        }
-        
-        for (int i = 0; i < plane_width; i+=plane_width - 1) {
-            glBegin(GL_TRIANGLE_STRIP);
-            for (int j = 0; j < plane_width; j++) {
-                glTexCoord2f( (i)/plane_width, (j)/plane_width );
-                glNormal3f( 0.f, 0.f, 1.f );
-                glVertex3f( i*w-offset*w, j*w-offset*w, grid[i+1][j] );
+                glVertex3f( i*w+w-offset*w, j*w-offset*w, 0.f );
 
                 glTexCoord2f( (i)/plane_width, (j)/plane_width );
                 glNormal3f( 0.f, 0.f, 1.f );
@@ -99,39 +85,6 @@ void DisplayCustom( ) {
             }
             glEnd( );
         }
-        
-        
-        for (int j = 0; j < plane_width; j+=plane_width - 1) {
-            glBegin(GL_TRIANGLE_STRIP);
-            for (int i = 0; i < plane_width; i++) {
-                glTexCoord2f( (i)/plane_width, (j)/plane_width );
-                glNormal3f( 0.f, 0.f, 1.f );
-                glVertex3f( i*w-offset*w, j*w-offset*w, grid[i+1][j] );
-
-                glTexCoord2f( (i)/plane_width, (j)/plane_width );
-                glNormal3f( 0.f, 0.f, 1.f );
-                glVertex3f( i*w-offset*w, j*w-offset*w, 0.f );
-            }
-            glEnd( );
-        }
-        
-        glBegin(GL_TRIANGLE_STRIP);
-            glTexCoord2f( 0.f, 0.f );
-            glNormal3f( 0.f, 0.f, 1.f );
-            glVertex3f( 0.f-offset*w, 0.f-offset*w, 0.f );
-
-            glTexCoord2f( 0.f, 1.f );
-            glNormal3f( 0.f, 0.f, 1.f );
-            glVertex3f( 0.f-offset*w, w*plane_width-offset*w, 0.f );
-            
-            glTexCoord2f( 1.f, 0.f );
-            glNormal3f( 0.f, 0.f, 1.f );
-            glVertex3f( w*plane_width-offset*w, 0.f-offset*w, 0.f );
-
-            glTexCoord2f( 1.f, 1.f );
-            glNormal3f( 0.f, 0.f, 1.f );
-            glVertex3f( w*plane_width-offset*w, w*plane_width-offset*w, 0.f );
-        glEnd( );
     glDisable( GL_TEXTURE_2D );
 
     Pattern->UnUse( );
