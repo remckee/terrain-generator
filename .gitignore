@@ -1,11 +1,11 @@
 # This is a simple .gitignore that will ignore everything
-# except this file, and c and h files
+# except this file, and cpp and h files
 
 #ignore everything
 *
 */
 
-#unignore .c, .h, and .sh and this file, and the README
+#unignore .cpp, .h, and .sh and this file, Makefile, and the README
 !*.bmp
 !*.cpp
 !*.frag
@@ -17,4 +17,4 @@
 !README.txt
 !*.sh
 !*.vert
-
+!Makefile
