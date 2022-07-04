@@ -1,9 +1,3 @@
-/*********************
-Name: Rebecca Mckeever
-Course: CS 450
-Final Project
-**********************/
-
 #ifndef DIAMOND_SQUARE_H
 #define DIAMOND_SQUARE_H
 

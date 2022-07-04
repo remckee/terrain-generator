@@ -1,9 +1,3 @@
-/*********************
-Name: Rebecca Mckeever
-Course: CS 450
-Final Project
-**********************/
-
 #ifndef MAIN_H
 #define MAIN_H
 

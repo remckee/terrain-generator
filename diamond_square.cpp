@@ -1,9 +1,3 @@
-/*********************
-Name: Rebecca Mckeever
-Course: CS 450
-Final Project
-**********************/
-
 #include "diamond_square.h"
 #define INIT_VAL            -1.f
 #define MAX_RAND_INPUT      10.f
