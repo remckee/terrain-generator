@@ -4,8 +4,8 @@ Course: CS 450
 Final Project
 **********************/
 
-#ifndef FINAL_H
-#define FINAL_H
+#ifndef MAIN_H
+#define MAIN_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -225,5 +225,5 @@ float           Unit(float [3], float [3]);
 // convert a 2D array of floats normalized to 1.0 to texture
 unsigned char*  ArrToTexture( GLfloat**, int, int );
 
-#endif /* FINAL_H */
+#endif /* MAIN_H */
 

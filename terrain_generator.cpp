@@ -7,8 +7,8 @@ Final Project
 #include "diamond_square.h"
 #include "main.h"
 
-const char* VERT_SHADER = "mckeever_final.vert";
-const char* FRAG_SHADER = "mckeever_final.frag";
+const char* VERT_SHADER = "terrain_generator.vert";
+const char* FRAG_SHADER = "terrain_generator.frag";
 
 const int N = 8;
 
