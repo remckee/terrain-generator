@@ -18,7 +18,6 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include "glut.h"
-#include "osusphere.h"
 #include "diamond_square.h"
 
 //    This is a sample OpenGL / GLUT program
