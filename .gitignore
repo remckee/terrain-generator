@@ -7,6 +7,7 @@
 
 #unignore .cpp, .h, and .sh and this file, Makefile, and the README
 !*.bmp
+!*.png
 !*.cpp
 !*.frag
 !.gitignore
@@ -18,3 +19,4 @@
 !*.sh
 !*.vert
 !Makefile
+!/screenshots
