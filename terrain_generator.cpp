@@ -164,7 +164,7 @@ void InitGraphicsCustom( ) {
     Pattern->SetVerbose( false );
     glPixelStorei (GL_UNPACK_ALIGNMENT, 1);
 
-    DesertTex = BmpToTexture( (char*)"desert.bmp", &width, &height );
+    DesertTex = BmpToTexture( (char*)"textures/desert.bmp", &width, &height );
     glGenTextures( 1, &Desert );
     glBindTexture( GL_TEXTURE_2D, Desert );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
@@ -173,7 +173,7 @@ void InitGraphicsCustom( ) {
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexImage2D( GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, DesertTex );
     
-    GrassTex = BmpToTexture( (char*)"grass.bmp", &width, &height );
+    GrassTex = BmpToTexture( (char*)"textures/grass.bmp", &width, &height );
     glGenTextures( 1, &Grass );
     glBindTexture( GL_TEXTURE_2D, Grass );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
@@ -182,7 +182,7 @@ void InitGraphicsCustom( ) {
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexImage2D( GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, GrassTex );
     
-    TempForestTex = BmpToTexture( (char*)"trees2.bmp", &width, &height );
+    TempForestTex = BmpToTexture( (char*)"textures/trees2.bmp", &width, &height );
     glGenTextures( 1, &TempForest );
     glBindTexture( GL_TEXTURE_2D, TempForest );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
@@ -191,7 +191,7 @@ void InitGraphicsCustom( ) {
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexImage2D( GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, TempForestTex );
     
-    ConfForestTex = BmpToTexture( (char*)"trees.bmp", &width, &height );
+    ConfForestTex = BmpToTexture( (char*)"textures/trees.bmp", &width, &height );
     glGenTextures( 1, &ConfForest );
     glBindTexture( GL_TEXTURE_2D, ConfForest );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
@@ -200,7 +200,7 @@ void InitGraphicsCustom( ) {
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexImage2D( GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, ConfForestTex );
     
-    MountainTex = BmpToTexture( (char*)"mountain.bmp", &width, &height );
+    MountainTex = BmpToTexture( (char*)"textures/mountain.bmp", &width, &height );
     glGenTextures( 1, &Mountain );
     glBindTexture( GL_TEXTURE_2D, Mountain );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
