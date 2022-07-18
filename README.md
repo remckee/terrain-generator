@@ -74,3 +74,7 @@ Running:
 <dt><kbd>z</kbd></dt>
 <dd>move backward</dd>
 </dl>
+
+## Known Issues
+
+Currently, the move left, right, forward, and backward controls do not work as intended.
