@@ -128,6 +128,11 @@ enum Biomes {
     //TROPICAL
 };
 
+enum Modes {
+    MAP,
+    EXPLORE
+};
+
 
 // the color definitions:
 // this order must match the menu order
@@ -204,6 +209,14 @@ void    SetFragAnimation(bool);
 void    SetShaderTexture(GLuint, int, int, char*);
 void    SetVertAnimation(bool);
 void    Visibility( int );
+
+float   LookAtX(void);
+float   LookAtY(void);
+float   LookAtZ(void);
+
+float   UpX(void);
+float   UpY(void);
+float   UpZ(void);
 
 void            Axes( float );
 unsigned char*  BmpToTexture( char *, int *, int * );

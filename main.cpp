@@ -8,6 +8,16 @@ const char *GLUITITLE   = { "User Interface Window" };
 const float MOVE_DISTANCE = 1.f;    // step length of movements in x and y direction
 const float ZOOM_DISTANCE = 5.f;    // step length of movements in z direction
 
+/* initial eye position coordinates in MAP mode */
+const float MAP_X0 = 0.f;
+const float MAP_Y0 = 0.f;
+const float MAP_Z0 = 50.f;
+
+/* initial eye position coordinates in EXPLORE mode */
+const float EXPLORE_X0 = 0.f;
+const float EXPLORE_Y0 = -10.f;
+const float EXPLORE_Z0 = 15.f;
+
 // non-constant global variables:
 int         ActiveButton;           // current button that is down
 GLuint      AxesList;               // list to hold the axes
@@ -24,13 +34,16 @@ int         WhichBiome;             // the currently active biome
 int         WhichColor;             // index into Colors[ ]
 int         WhichProjection;        // ORTHO or PERSP
 int         Xmouse, Ymouse;         // mouse values
-float       Xrot, Yrot;             // rotation angles in degrees
+float       Zrot;                   // rotation angles in degrees
 
 //float       Time;
 
 bool        vertAnimation;
 bool        fragAnimation;
-float       eyex = 0.f, eyey = 0.f, eyez = 50.f;
+float       eyex = MAP_X0;
+float       eyey = MAP_Y0;
+float       eyez = MAP_Z0;
+int         mode = MAP;
 
 
 // main program:
@@ -126,11 +139,14 @@ void Display( ) {
     glLoadIdentity( );
 
     // set the eye position, look-at position, and up-vector:
-    gluLookAt( eyex, eyey, eyez,     0., 0., 0.,     0., 1., 0. );
+    gluLookAt(
+        eyex, eyey, eyez,
+        LookAtX(), LookAtY(), LookAtZ(),
+        UpX(), UpY(), UpZ()
+    );
 
     // rotate the scene:
-    glRotatef( (GLfloat)Yrot, 0., 1., 0. );
-    glRotatef( (GLfloat)Xrot, 1., 0., 0. );
+    glRotatef( (GLfloat)Zrot, 0., 0., 1. );
 
     // uniformly scale the scene:
     if( Scale < MINSCALE )
@@ -173,6 +189,53 @@ void Display( ) {
     // note: be sure to use glFlush( ) here, not glFinish( ) !
     glFlush( );
 }
+
+
+float LookAtX(void) {
+    return eyex;
+}
+
+
+float LookAtY(void) {
+    if (mode == MAP) {
+        return eyey;
+    } else {
+        return 0.;
+    }
+}
+
+
+float LookAtZ(void) {
+    if (mode == MAP) {
+        return 0.;
+    } else {
+        return eyez;
+    }
+}
+
+
+float UpX(void) {
+    return 0.;
+}
+
+
+float UpY(void) {
+    if (mode == MAP) {
+        return 1.;
+    } else {
+        return 0.;
+    }
+}
+
+
+float UpZ(void) {
+    if (mode == MAP) {
+        return 0.;
+    } else {
+        return 1.;
+    }
+}
+
 
 void DoAxesMenu( int id ) {
     AxesOn = id;
@@ -388,9 +451,8 @@ void InitGraphics( ) {
     glutReshapeFunc( Resize );
     glutKeyboardFunc( Keyboard );
     glutMouseFunc( MouseButton );
-    glutMotionFunc( MouseMotion );
-    glutPassiveMotionFunc(MouseMotion);
-    //glutPassiveMotionFunc( NULL );
+    glutMotionFunc( NULL );
+    glutPassiveMotionFunc( NULL );
     glutVisibilityFunc( Visibility );
     glutEntryFunc( NULL );
     glutSpecialFunc( NULL );
@@ -531,6 +593,22 @@ void Keyboard( unsigned char c, int x, int y ) {
                 glutIdleFunc( Animate );
             break;
 
+        case 'm':
+        case 'M':
+            mode = !mode;
+            if (mode == MAP) {
+                eyex = MAP_X0;
+                eyey = MAP_Y0;
+                eyez = MAP_Z0;
+            } else {
+                eyex = EXPLORE_X0;
+                eyey = EXPLORE_Y0;
+                eyez = EXPLORE_Z0;
+            }
+            Zrot = 0.;
+            Scale  = 1.0;
+            break;
+
         case 'o':
         case 'O':
             WhichProjection = ORTHO;
@@ -564,12 +642,14 @@ void Keyboard( unsigned char c, int x, int y ) {
 
         case 'x':
         case 'X':
-            eyez += ZOOM_DISTANCE;
+            if (mode == MAP)
+                eyez += ZOOM_DISTANCE;
             break;
             
         case 'z':
         case 'Z':
-            eyez -= ZOOM_DISTANCE;
+            if (mode == MAP)
+                eyez -= ZOOM_DISTANCE;
             break;
             
 
@@ -604,17 +684,21 @@ void MouseButton( int button, int state, int x, int y ) {
             b = RIGHT;        break;
 
         case SCROLL_WHEEL_UP:
-            Scale += SCLFACT * SCROLL_WHEEL_CLICK_FACTOR;
-            // keep object from turning inside-out or disappearing:
-            if (Scale < MINSCALE)
-                Scale = MINSCALE;
+            if (mode == MAP) {
+                Scale += SCLFACT * SCROLL_WHEEL_CLICK_FACTOR;
+                // keep object from turning inside-out or disappearing:
+                if (Scale < MINSCALE)
+                    Scale = MINSCALE;
+            }
             break;
 
         case SCROLL_WHEEL_DOWN:
-            Scale -= SCLFACT * SCROLL_WHEEL_CLICK_FACTOR;
-            // keep object from turning inside-out or disappearing:
-            if (Scale < MINSCALE)
-                Scale = MINSCALE;
+            if (mode == MAP) {
+                Scale -= SCLFACT * SCROLL_WHEEL_CLICK_FACTOR;
+                // keep object from turning inside-out or disappearing:
+                if (Scale < MINSCALE)
+                    Scale = MINSCALE;
+            }
             break;
 
         default:
@@ -642,22 +726,10 @@ void MouseButton( int button, int state, int x, int y ) {
 void MouseMotion( int x, int y ) {
 
     int dx = x - Xmouse;        // change in mouse coords
-    int dy = y - Ymouse;
 
-    if( ( ActiveButton & LEFT ) != 0 )
+    if( ( ActiveButton & LEFT ) != 0 && mode == EXPLORE )
     {
-        Xrot += ( ANGFACT*dy );
-        Yrot += ( ANGFACT*dx );
-    }
-
-
-    if( ( ActiveButton & MIDDLE ) != 0 )
-    {
-        Scale += SCLFACT * (float) ( dx - dy );
-
-        // keep object from turning inside-out or disappearing:
-        if( Scale < MINSCALE )
-            Scale = MINSCALE;
+        Zrot += ( ANGFACT*dx );
     }
 
     Xmouse = x;            // new current position
@@ -688,7 +760,7 @@ void Reset( ) {
     WhichBiome = TEMPERATE;
     WhichColor = WHITE;
     WhichProjection = PERSP;
-    Xrot = Yrot = 0.;
+    Zrot = 0.;
     //Time = GetCycleTime(CYCLE);
     Frozen = false;    
     vertAnimation = true;

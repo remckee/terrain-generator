@@ -77,4 +77,3 @@ Running:
 
 ## Known Issues
 
-Currently, the move left, right, forward, and backward controls do not work as intended.
