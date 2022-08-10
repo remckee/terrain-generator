@@ -554,7 +554,7 @@ void Keyboard( unsigned char c, int x, int y ) {
 
         case 's':
         case 'S':
-            eyez -= MOVE_DISTANCE;
+            eyey -= MOVE_DISTANCE;
             break;
 
         case 'w':
@@ -569,7 +569,7 @@ void Keyboard( unsigned char c, int x, int y ) {
             
         case 'z':
         case 'Z':
-            eyey -= ZOOM_DISTANCE;
+            eyez -= ZOOM_DISTANCE;
             break;
             
 

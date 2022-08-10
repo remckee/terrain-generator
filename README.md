@@ -66,13 +66,13 @@ Running:
 <dt><kbd>r</kbd></dt>
 <dd>regenerate terrain</dd>
 <dt><kbd>s</kbd></dt>
-<dd>zoom out</dd>
+<dd>move backward</dd>
 <dt><kbd>w</kbd></dt>
 <dd>move forward</dd>
 <dt><kbd>x</kbd></dt>
 <dd>zoom in</dd>
 <dt><kbd>z</kbd></dt>
-<dd>move backward</dd>
+<dd>zoom out</dd>
 </dl>
 
 ## Known Issues
