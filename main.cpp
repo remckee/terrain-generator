@@ -5,6 +5,9 @@
 const char *WINDOWTITLE = { "OpenGL / GLUT Sample -- Rebecca Mckeever" };
 const char *GLUITITLE   = { "User Interface Window" };
 
+const float MOVE_DISTANCE = 1.f;    // step length of movements in x and y direction
+const float ZOOM_DISTANCE = 5.f;    // step length of movements in z direction
+
 // non-constant global variables:
 int         ActiveButton;           // current button that is down
 GLuint      AxesList;               // list to hold the axes
@@ -503,7 +506,7 @@ void Keyboard( unsigned char c, int x, int y ) {
     {
         case 'a':
         case 'A':
-            eyex -= 5.f;
+            eyex -= MOVE_DISTANCE;
             break;
 
         // animate both fragments and vertices
@@ -516,7 +519,7 @@ void Keyboard( unsigned char c, int x, int y ) {
 
         case 'd':
         case 'D':
-            eyex += 5.f;
+            eyex += MOVE_DISTANCE;
             break;
 
         case 'f':
@@ -551,22 +554,22 @@ void Keyboard( unsigned char c, int x, int y ) {
 
         case 's':
         case 'S':
-            eyez -= 5.f;
+            eyez -= MOVE_DISTANCE;
             break;
 
         case 'w':
         case 'W':
-            eyey += 5.f;
+            eyey += MOVE_DISTANCE;
             break;
 
         case 'x':
         case 'X':
-            eyez += 5.f;
+            eyez += ZOOM_DISTANCE;
             break;
             
         case 'z':
         case 'Z':
-            eyey -= 5.f;
+            eyey -= ZOOM_DISTANCE;
             break;
             
 
