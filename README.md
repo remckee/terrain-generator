@@ -49,7 +49,7 @@ Running:
 
 <dl>
 <dt>Scroll wheel</dt>
-<dd>zoom in/zoom out (`MAP` mode only)</dd>
+<dd>zoom in/zoom out (<code>MAP</code> mode only)</dd>
 <dt>Right click</dt>
 <dd>view menu</dd>
 </dl>
