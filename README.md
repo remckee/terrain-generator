@@ -58,9 +58,9 @@ Running:
 
 <dl>
 <dt><kbd>a</kbd></dt>
-<dd>move left (`EXPLORE` mode) or west (`MAP` mode)</dd>
+<dd>move left (<code>EXPLORE</code> mode) or west (<code>MAP</code> mode)</dd>
 <dt><kbd>d</kbd></dt>
-<dd>move right (`EXPLORE` mode) or east (`MAP` mode)</dd>
+<dd>move right (<code>EXPLORE</code> mode) or east (<code>MAP</code> mode)</dd>
 <dt><kbd>o</kbd></dt>
 <dd>view orthographic projection</dd>
 <dt><kbd>p</kbd></dt>
@@ -70,13 +70,13 @@ Running:
 <dt><kbd>r</kbd></dt>
 <dd>regenerate terrain</dd>
 <dt><kbd>s</kbd></dt>
-<dd>move backward (`EXPLORE` mode) or south (`MAP` mode)</dd>
+<dd>move backward (<code>EXPLORE</code> mode) or south (<code>MAP</code> mode)</dd>
 <dt><kbd>w</kbd></dt>
-<dd>move forward (`EXPLORE` mode) or north (`MAP` mode)</dd>
+<dd>move forward (<code>EXPLORE</code> mode) or north (<code>MAP</code> mode)</dd>
 <dt><kbd>x</kbd></dt>
-<dd>zoom in (`MAP` mode only)</dd>
+<dd>zoom in (<code>MAP</code> mode only)</dd>
 <dt><kbd>z</kbd></dt>
-<dd>zoom out (`MAP` mode only)</dd>
+<dd>zoom out (<code>MAP</code> mode only)</dd>
 </dl>
 
 ## Known Issues
