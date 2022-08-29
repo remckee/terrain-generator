@@ -25,6 +25,12 @@ The data from the array is written to a texture that is used in the vertex shade
 
 The vertex shader also controls which color or texture is used in each part of the terrain. The ratio of the elevation of each vertex to the maximum elevation in the current terrain determines how the vertex should be colored. There are three cutoff points: one for water, one for land, and one for mountain. Vertices below the first cutoff point are colored blue to represent water. Vertices between the first and second cutoff points are colored with a texture specific to the current biome. Vertices between the second and third cutoff points are colored with the mountain texture. Vertices above the third cutoff point are colored white to represent snow on the top of the mountain. Each terrain has its own set of cutoff points.
 
+## Modes
+
+The user can toggle between `MAP` mode, where the terrain is viewed from above, and `EXPLORE` mode, where the terrain is viewed as if the user is standing on it. In `MAP` mode, the user can zoom in and out and move north, east, south, or west. In `EXPLORE` mode, the user can move left, right, forward, and backward.
+
+![screenshot of MAP mode](screenshots/temperate_forest_map_mode.png "Viewing a temperate forest biome in MAP mode")
+
 ## Usage
 
 Building:
@@ -43,20 +49,18 @@ Running:
 
 <dl>
 <dt>Scroll wheel</dt>
-<dd>zoom in/zoom out</dd>
+<dd>zoom in/zoom out (`MAP` mode only)</dd>
 <dt>Right click</dt>
 <dd>view menu</dd>
-<dt>Click and drag with left mouse button</dt>
-<dd>rotate map</dd>
 </dl>
 
 #### Keyboard
 
 <dl>
 <dt><kbd>a</kbd></dt>
-<dd>move left</dd>
+<dd>move left (`EXPLORE` mode) or west (`MAP` mode)</dd>
 <dt><kbd>d</kbd></dt>
-<dd>move right</dd>
+<dd>move right (`EXPLORE` mode) or east (`MAP` mode)</dd>
 <dt><kbd>o</kbd></dt>
 <dd>view orthographic projection</dd>
 <dt><kbd>p</kbd></dt>
@@ -66,13 +70,13 @@ Running:
 <dt><kbd>r</kbd></dt>
 <dd>regenerate terrain</dd>
 <dt><kbd>s</kbd></dt>
-<dd>move backward</dd>
+<dd>move backward (`EXPLORE` mode) or south (`MAP` mode)</dd>
 <dt><kbd>w</kbd></dt>
-<dd>move forward</dd>
+<dd>move forward (`EXPLORE` mode) or north (`MAP` mode)</dd>
 <dt><kbd>x</kbd></dt>
-<dd>zoom in</dd>
+<dd>zoom in (`MAP` mode only)</dd>
 <dt><kbd>z</kbd></dt>
-<dd>zoom out</dd>
+<dd>zoom out (`MAP` mode only)</dd>
 </dl>
 
 ## Known Issues
